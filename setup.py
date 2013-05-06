@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# For some reason, building exes with py2exe doesnt work right now.
+# -*- coding: utf-8 -*-
 from setuptools import setup
 from distutils.command.install import INSTALL_SCHEMES
 import os
@@ -14,7 +14,8 @@ for dirpath, dirnames, filenames in os.walk('calentic'):
         if dirname.startswith('.'):
             del dirnames[i]
     if filenames:
-        data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
+        data_files.append(
+            [dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 setup(name='Calentic',
       version='0.0.1',
@@ -30,13 +31,13 @@ setup(name='Calentic',
       packages=['calentic'],
       data_files=data_files,
       package_data={
-        'calentic' : [
-            'static/'
-            'templates/'
-            ]
+          'calentic': [
+              'static/'
+              'templates/'
+          ]
       },
       entry_points="""
         [console_scripts]
         rstextme = calentic.server:server
       """
-     )
+    )
