@@ -23,7 +23,7 @@ setup(name='Calentic',
       url='http://www.calenti.co',
       download_url='http://github.com/Dlabs-co/calentic',
       license='GPL2',
-      requires=['flask'],
+      requires=['flask', 'flask_pymongo'],
       classifiers=[
           'Development Status :: 4 - Beta',
       ],
