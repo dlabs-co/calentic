@@ -1,5 +1,5 @@
 ![CalenTIC](http://i.imgur.com/zW76vBN.png)
-Unified TIC calendar
+Unified ICT Events (TIC in Spanish) calendar
 ========
 
 Check out the 
