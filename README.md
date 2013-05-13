@@ -1,4 +1,4 @@
-![CalenTIC](http://i.imgur.com/YCo8zlg.png)
+![CalenTIC](http://i.imgur.com/K66uwfm.png)
 Unified ICT Events (TIC in Spanish) calendar
 ========
 
