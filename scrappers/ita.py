@@ -76,6 +76,3 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
             ita_events.append(eventObject)
     
     return ita_events
-            
-            
-get_events()
