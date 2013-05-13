@@ -1,21 +1,15 @@
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
+import json
 
 BASE_URL = "http://www.ita.es/ita/"
 ita_events = [] #The empty list where the EventITA instances will be stored and returned at the end of get_events function
 
-class EventITA:
-    def __init__(self, title, description, start_date, registration_url):
-        self.origin = "ITA"
-        self.title = title
-        self.description = description
-        self.start_date = start_date
-        self.registration_url = registration_url
 
 def get_events(section_url = "http://www.ita.es/ita/?eventos"):
     """
-    When get_events() is executed, a group of EventITA objects are created and stored in ita_events list
+    When get_events() is executed, a JSON is created with all the events and returned
     """
     html = urlopen(section_url).read()
     soup = BeautifulSoup(html, "lxml")
@@ -67,7 +61,12 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
             event_descriptions[BASE_URL + item["href"]] = None
     
     for n in range(len(event_titles)):
-        eventObject = EventITA(event_titles[n], event_descriptions[event_links[n]], event_dates[n], event_links[n])
+        eventObject = {
+            'title': event_titles[n], 
+            'description': event_descriptions[event_links[n]], 
+            'start_date': event_dates[n], 
+            'registration_url': event_links[n]
+            }
         
         if eventObject in ita_events:
             pass
@@ -75,4 +74,8 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
         else:
             ita_events.append(eventObject)
     
-    return ita_events
+    return json.dumps(ita_events)
+    
+    
+
+get_events()
