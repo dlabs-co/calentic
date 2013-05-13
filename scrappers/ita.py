@@ -6,7 +6,7 @@ BASE_URL = "http://www.ita.es/ita/"
 ita_events = [] #The empty list where the EventITA instances will be stored and returned at the end of get_events function
 
 class EventITA:
-    def __init__(self, title, description, date, event_url):
+    def __init__(self, title, description, start_date, registration_url):
         self.origin = "ITA"
         self.title = title
         self.description = description
