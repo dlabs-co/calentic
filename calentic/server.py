@@ -20,13 +20,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 """
 from flask import Flask
+from flask.ext.pymongo import PyMongo
 
 import json
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     return json.dumps([])
+
 
 def server():
     app.run(host='0.0.0.0', port=8080)
