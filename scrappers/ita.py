@@ -10,8 +10,8 @@ class EventITA:
         self.origin = "ITA"
         self.title = title
         self.description = description
-        self.date = date
-        self.event_url = event_url
+        self.start_date = start_date
+        self.registration_url = registration_url
 
 def get_events(section_url = "http://www.ita.es/ita/?eventos"):
     """
