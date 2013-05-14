@@ -38,6 +38,6 @@ setup(name='Calentic',
       },
       entry_points="""
         [console_scripts]
-        rstextme = calentic.server:server
+        calentic = calentic.server:server
       """
     )
