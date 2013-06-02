@@ -34,7 +34,7 @@ REGISTRATION_URL:
 import mechanize
 from icalendar import Calendar, Event
 import json
-import collections
+from collections import OrderedDict
 
 
 DATE_FORMAT = "%a %d-%m-%Y %H:%M"
@@ -70,11 +70,11 @@ def set_json_content(events_list):
         end_date = event.get("DTEND").dt.strftime(DATE_FORMAT)
         location = event.get("LOCATION")
         
-        data = collections.OrderedDict([('title', title), 
-                                        ('description', description), 
-                                        ('start_date', start_date), 
-                                        ('end_date', end_date), 
-                                        ('location', location)])
+        data = OrderedDict([('title', title), 
+                            ('description', description),
+                            ('start_date', start_date),
+                            ('end_date', end_date),
+                            ('location', location)])
         json_data.append(data)
 
     final_json = json.dumps(json_data, ensure_ascii=False, 
