@@ -31,14 +31,14 @@ REGISTRATION_URL:
 """
 
 
-
-
 import mechanize
 from icalendar import Calendar, Event
+import json
+import collections
 
 
-URL = "http://betabeers.com/event/ical/"
-# URL = "http://betabeers.com/event/ical/?province_id=Z"
+DATE_FORMAT = "%a %d-%m-%Y %H:%M"
+URL = "http://betabeers.com/event/ical/?province_id=Z"
 
 
 def get_ics_calendar(url=URL):
@@ -51,25 +51,41 @@ def get_ics_calendar(url=URL):
 
 def get_events_from_calendar(ics):
     """
-    Get events from icalendar.
+    Return a list with all events.
     """
     calendar = Calendar.from_ical(ics)
     events = [event for event in calendar.walk() if isinstance(event, Event)]
-
-    for event in events:
+    return events
+    
+def set_json_content(events_list):
+    """
+    Encode json from events.
+    """
+    json_data = []
+    
+    for event in events_list:    
         title = event.get("SUMMARY")
         description = event.get("DESCRIPTION")
-        start_date = event.get("DTSTART").dt
-        end_date = event.get("DTEND").dt
+        start_date = event.get("DTSTART").dt.strftime(DATE_FORMAT)
+        end_date = event.get("DTEND").dt.strftime(DATE_FORMAT)
         location = event.get("LOCATION")
-        print "%s\n%s\n%s\n%s\n%s" % (title, description, start_date, end_date, 
-                                      location)
- 
+        
+        data = collections.OrderedDict([('title', title), 
+                                        ('description', description), 
+                                        ('start_date', start_date), 
+                                        ('end_date', end_date), 
+                                        ('location', location)])
+        json_data.append(data)
+
+    final_json = json.dumps(json_data, ensure_ascii=False, 
+                            separators=(",", ":"), sort_keys=False)
+    return final_json
 
 
 def main():
     ics = get_ics_calendar(URL)
-    get_events_from_calendar(ics)
+    events = get_events_from_calendar(ics)
+    set_json_content(events)
 
 
 
