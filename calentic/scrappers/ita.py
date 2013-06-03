@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 from urllib2 import urlopen
 import json
 
@@ -14,9 +14,9 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
     html = urlopen(section_url).read()
     soup = BeautifulSoup(html, "lxml")
     ita_items = soup.find("section", "ita-items")
-    
+
     event_links = [BASE_URL + a["href"] for a in ita_items.findAll("a")]
-    
+
     event_titles = []
     temp = ita_items.find_all("h3")
     for item in temp:
@@ -29,7 +29,7 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
                        event_titles.append(subitem[4:-5])
                    else:
                        event_titles.append(subitem[1:-5])
-    
+
     event_dates = []
     months = {'Ene':'01', 'Feb':'02', 'Mar':'03', 'Abr':'04', 'May':'05', 'Jun':'06', 'Jul':'07', 'Ago':'08', 'Sep':'09', 'Oct':'10', 'Nov':'11', 'Dic':'12'}
     for h4 in ita_items.findAll("h4"):
@@ -37,7 +37,7 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
         copy_temp = temp
         temp[1] = months[copy_temp[1]]
         event_dates.append("/".join(temp))
-    
+
     event_descriptions = dict()
     temp = ita_items.findAll("a")
     for item in temp:
@@ -48,34 +48,34 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
                     for subitem2 in str(item2).split("<small>"):
                         if "</small>" in str(subitem2):
                             pass
-                        
+
                         else:
                             description = subitem2[3:]
                             event_descriptions[BASE_URL + item["href"]] = str(description)
 
-            
+
             else:
                 event_descriptions[BASE_URL + item["href"]] = None
-        
+
         else:
             event_descriptions[BASE_URL + item["href"]] = None
-    
+
     for n in range(len(event_titles)):
         eventObject = {
-            'title': event_titles[n], 
-            'description': event_descriptions[event_links[n]], 
-            'start_date': event_dates[n], 
+            'title': event_titles[n],
+            'description': event_descriptions[event_links[n]],
+            'start_date': event_dates[n],
             'registration_url': event_links[n]
             }
-        
+
         if eventObject in ita_events:
             pass
-        
+
         else:
             ita_events.append(eventObject)
-    
+
     return json.dumps(ita_events)
-    
-    
+
+
 
 get_events()
