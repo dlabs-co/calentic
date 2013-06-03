@@ -24,7 +24,7 @@ import calentic.scrappers
 
 def main():
     for scrapper in calentic.scrappers.__all__:
-        mod=getattr(calentic.scrappers, i)
+        mod=getattr(calentic.scrappers, scrapper)
         getattr(mod, "get_events")()
 
 if __name__ == "__main__":
