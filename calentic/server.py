@@ -21,6 +21,7 @@
 """
 
 from flask import Flask
+import json
 from flask.ext.pymongo import PyMongo
 
 APP = Flask(__name__)
@@ -43,9 +44,10 @@ def index(start_date=None, end_date=None, place=None):
     if place:
         search_array['place'] = place
 
-    return MONGO.db.events.find(
+    return json.dumps([ ev for ev in MONGO.db.events.find(
         search_array
-    )
+    )])
+    return "foo"
 
 
 def server():
