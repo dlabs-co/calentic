@@ -65,7 +65,8 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
             'title': event_titles[n], 
             'description': event_descriptions[event_links[n]], 
             'start_date': event_dates[n], 
-            'registration_url': event_links[n]
+            'registration_url': event_links[n],
+            'origin': 'ITA',
             }
         
         if eventObject in ita_events:
