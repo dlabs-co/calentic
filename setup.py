@@ -39,5 +39,6 @@ setup(name='Calentic',
       entry_points="""
         [console_scripts]
         calentic = calentic.server:server
+        calentic_scrappery = calentic.scrappery:main
       """
     )
