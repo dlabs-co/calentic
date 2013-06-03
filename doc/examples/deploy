@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# Example deploy script for calentic w/lighttpd. Crappy, but I dont ha
+# ve time for more now.
+# This probably works only on debian with git-core and lighttpd installed.
+# Oh, and python-setuptools python-pip
+
+setup_lighty(){
+	mkdir /var/www/calentic.com
+	cp doc/examples/calentic.fcgi /var/www/calentic.com
+	cp doc/examples/lighttpd_calentic.conf /etc/lighttpd/conf-enabled/
+	echo "create database calentic"| mysql -uroot -proot  
+	git clone https://github.com/dlabs-co/calentic/calentic/static
+	cp -r calentic/static /var/www/calentic.com/
+	chown -R www-data:www-data /var/www/calentic.com
+	invoke-lighttpd restart
+}
+
+apt-get install git-core lighttpd python-pip python-setuptools
+
+git remote -v show |grep calentic && {
+	git pull 
+	[[ $1 == "init_lighttpd" ]] && setup_lighty
+	cd /var/www/calentic.com/static
+	git pull
+	cd -
+} || {
+	git clone https://github.com/dlabs-co/calentic 
+	cd calentic
+	pip install -r deps
+	[[ $1 == "init_lighttpd" ]] && setup_lighty
+}
+
+python setup.py install

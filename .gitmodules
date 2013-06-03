@@ -1,3 +1,6 @@
-[submodule "cachirulocalendar.wiki"]
-	path = cachirulocalendar.wiki
+# [submodule "cachirulocalendar.wiki"]
+#	path = cachirulocalendar.wiki
+#	url = https://github.com/rrasmo/cachirulocalendar.wiki.git
+[submodule "doc/cachirulocalendar.wiki"]
+	path = doc/cachirulocalendar.wiki
 	url = https://github.com/rrasmo/cachirulocalendar.wiki.git

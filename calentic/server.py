@@ -20,7 +20,7 @@
 
 """
 
-from flask import Flask
+from flask import Flask, render_template
 import json
 from flask.ext.pymongo import PyMongo
 
@@ -49,6 +49,9 @@ def index(start_date=None, end_date=None, place=None):
     )])
     return "foo"
 
+@APP.route("/")
+def main():
+    return render_template('index.html')
 
 def server():
     """

@@ -1,1 +1,5 @@
 flask-pymongo
+mechanize
+icalendar
+pytz
+BeautifulSoup

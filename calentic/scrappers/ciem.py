@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from calendar_parser import CalendarParser
+from  calentic.scrappers.calendar_parser import CalendarParser
 import json
 import sys
 
@@ -17,40 +17,42 @@ REGISTRATION_URL:
 """
 reload(sys)
 sys.setdefaultencoding("utf-8")
-agile_events = []
+ciem_events = []
 
-ics_url = "https://www.google.com/calendar/ical/agileenaragon%40gmail.com/public/basic.ics"
+ics_url = "https://www.google.com/calendar/ical/ciemzaragoza%40gmail.com/public/basic.ics"
 
 def get_events():
     cal = CalendarParser(ics_url=ics_url)
-    
-    
+
+
     ics_events = cal.parse_calendar()
-    
+
     for event in ics_events:
         try:
-            eventAgile = {
-                'origin': 'Agile Aragón',
+            eventCiem = {
+                'origin': 'CIEM',
                 'title': event['name'],
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
                 'location': event['location'],
             }
-        
-            agile_events.append(eventAgile)
-        
+
+            ciem_events.append(eventCiem)
+
         except KeyError:
-            eventAgile = {
-                'origin': 'Agile Aragón',
+            eventCiem = {
+                'origin': 'CIEM',
                 'title': event['name'],
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
             }
-        
-            agile_events.append(eventAgile)
-    
-    return json.dumps(agile_events)
-        
-get_events()
+
+            ciem_events.append(eventCiem)
+
+    return json.dumps(ciem_events)
+
+if __name__ == "__main__":
+    get_events()
+
