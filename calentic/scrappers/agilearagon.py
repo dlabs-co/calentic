@@ -23,10 +23,10 @@ ics_url = "https://www.google.com/calendar/ical/agileenaragon%40gmail.com/public
 
 def get_events():
     cal = CalendarParser(ics_url=ics_url)
-    
-    
+
+
     ics_events = cal.parse_calendar()
-    
+
     for event in ics_events:
         try:
             eventAgile = {
@@ -37,9 +37,9 @@ def get_events():
                 'end_date': str(event['end_time']),
                 'location': event['location'],
             }
-        
+
             agile_events.append(eventAgile)
-        
+
         except KeyError:
             eventAgile = {
                 'origin': 'Agile Aragón',
@@ -48,9 +48,10 @@ def get_events():
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
             }
-        
+
             agile_events.append(eventAgile)
-    
+
     return json.dumps(agile_events)
-        
-get_events()
+
+if __name__ == "__main__":
+    get_events()

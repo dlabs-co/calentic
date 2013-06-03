@@ -56,40 +56,36 @@ def get_events_from_calendar(ics):
     calendar = Calendar.from_ical(ics)
     events = [event for event in calendar.walk() if isinstance(event, Event)]
     return events
-    
+
 def set_json_content(events_list):
     """
     Encode json from events.
     """
     json_data = []
-    
-    for event in events_list:    
+
+    for event in events_list:
         title = event.get("SUMMARY")
         description = event.get("DESCRIPTION")
         start_date = event.get("DTSTART").dt.strftime(DATE_FORMAT)
         end_date = event.get("DTEND").dt.strftime(DATE_FORMAT)
         location = event.get("LOCATION")
-        
-        data = OrderedDict([('title', title), 
+
+        data = OrderedDict([('title', title),
                             ('description', description),
                             ('start_date', start_date),
                             ('end_date', end_date),
                             ('location', location)])
         json_data.append(data)
 
-    final_json = json.dumps(json_data, ensure_ascii=False, 
+    final_json = json.dumps(json_data, ensure_ascii=False,
                             separators=(",", ":"), sort_keys=False)
     return final_json
 
 
-def main():
+def get_events():
     ics = get_ics_calendar(URL)
     events = get_events_from_calendar(ics)
-    set_json_content(events)
-
-
-
-
+    return set_json_content(events)
 
 if __name__ == '__main__':
-    main()
+    get_events()

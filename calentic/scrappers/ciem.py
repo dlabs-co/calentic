@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from calendar_parser import CalendarParser
+from  calentic.scrappers.calendar_parser import CalendarParser
 import json
 import sys
 
@@ -23,10 +23,10 @@ ics_url = "https://www.google.com/calendar/ical/ciemzaragoza%40gmail.com/public/
 
 def get_events():
     cal = CalendarParser(ics_url=ics_url)
-    
-    
+
+
     ics_events = cal.parse_calendar()
-    
+
     for event in ics_events:
         try:
             eventCiem = {
@@ -37,9 +37,9 @@ def get_events():
                 'end_date': str(event['end_time']),
                 'location': event['location'],
             }
-        
+
             ciem_events.append(eventCiem)
-        
+
         except KeyError:
             eventCiem = {
                 'origin': 'CIEM',
@@ -48,9 +48,11 @@ def get_events():
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
             }
-        
+
             ciem_events.append(eventCiem)
-    
+
     return json.dumps(ciem_events)
-        
-get_events()
+
+if __name__ == "__main__":
+    get_events()
+

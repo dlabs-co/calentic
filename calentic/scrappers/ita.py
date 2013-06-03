@@ -76,6 +76,5 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
 
     return json.dumps(ita_events)
 
-
-
-get_events()
+if __name__ == "__main__":
+    get_events()
