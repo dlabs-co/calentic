@@ -51,7 +51,7 @@ def get_events():
 
             ciem_events.append(eventCiem)
 
-    return json.dumps(ciem_events)
+    return ciem_events
 
 if __name__ == "__main__":
     get_events()
