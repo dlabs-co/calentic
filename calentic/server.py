@@ -29,19 +29,21 @@ APP.config['MONGO_DBNAME'] = "calentic"
 MONGO = PyMongo(APP)
 
 
-@APP.route("/<start_date>/<end_date>/<place>")
+@APP.route("/events/<start_date>/<end_date>/<place>")
 def index(start_date=None, end_date=None, place=None):
     """
         Returns filtered events.
         <start_date>/<end_date>/place
+        if you want it to not look at some param, just use None
+        localhost/events/None/None/place
     """
 
     search_array = {}
-    if start_date:
+    if start_date and start_date != "None":
         search_array['start_date'] = start_date
-    if end_date:
+    if end_date and end_date != "None":
         search_array['end_date'] = end_date
-    if place:
+    if place and place != "None":
         search_array['place'] = place
 
     return json.dumps([ ev for ev in MONGO.db.events.find(
