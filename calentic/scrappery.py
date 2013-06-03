@@ -21,11 +21,18 @@
 """
 from calentic.scrappers import *
 import calentic.scrappers
+import pymongo
 
 def main():
+    client = pymongo.MongoClient("localhost", 27017)
+    db=client.calentic
     for scrapper in calentic.scrappers.__all__:
         mod=getattr(calentic.scrappers, scrapper)
-        getattr(mod, "get_events")()
+        events = getattr(mod, "get_events")()
+        # TODO This is somehow how it should be, untested
+        # Amazing, btw.
+        for event in events:
+            db.events.save(event)
 
 if __name__ == "__main__":
     main()
