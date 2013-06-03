@@ -24,6 +24,7 @@ from flask import Flask
 from flask.ext.pymongo import PyMongo
 
 APP = Flask(__name__)
+APP.config['MONGO_DBNAME'] = "calentic"
 MONGO = PyMongo(APP)
 
 
