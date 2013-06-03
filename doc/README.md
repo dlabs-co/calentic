@@ -13,16 +13,6 @@ presents the data in a nice form and a API
 Dependences
 --------------
 
-:: 
-
-    pip install Flask
-    pip install Flask-PyMongo
-    pip install BeautifulSoup
-
-Or
-
-::
-
     pip install -r deps
 
 Running
