@@ -23,16 +23,25 @@ from calentic.scrappers import *
 import calentic.scrappers
 import pymongo
 
+
 def main():
+    """
+        Connects to a mongo database, executes
+        all the scrappers and put the events in
+        place in case they're not there already
+    """
+
     client = pymongo.MongoClient("localhost", 27017)
-    db=client.calentic
+    db = client.calentic
     for scrapper in calentic.scrappers.__all__:
-        mod=getattr(calentic.scrappers, scrapper)
+        mod = getattr(calentic.scrappers, scrapper)
         events = getattr(mod, "get_events")()
         # TODO This is somehow how it should be, untested
         # Amazing, btw.
         for event in events:
-            db.events.save(event)
+            if not db.events.find({'title': event['title']}):
+                # Dont save events we already have.
+                db.events.save(event)
 
 if __name__ == "__main__":
     main()
