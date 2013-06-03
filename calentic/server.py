@@ -47,7 +47,6 @@ def index(start_date=None, end_date=None, place=None):
     return json.dumps([ ev for ev in MONGO.db.events.find(
         search_array
     )])
-    return "foo"
 
 @APP.route("/")
 def main():
