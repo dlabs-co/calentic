@@ -3,27 +3,39 @@ from xml.dom import minidom
 
 BASE_URL = "http://www.observatorioaragones.org/forostic/"
 FEED_URL = "http://www.google.com/calendar/feeds/forosticaragon%40gmail.com" +\
-"/private-802f258df2d9b737b847178a508654dc/full"
+    "/private-802f258df2d9b737b847178a508654dc/full"
+
+
+def get_value(name, node):
+    """
+        Returns the text value of a node
+    """
+    return node.getElementsByTagName(name)[0].firstChild.nodeValue
+
 
 def get_events():
+    """
+        Get the events
+    """
     response = urllib2.urlopen(FEED_URL)
     atom = response.read()
+    dom = minidom.parseString(atom)
+    results = []
 
-    try:
-        dom = minidom.parseString(atom)
-        #print arbol_dom.toxml()
-    except Exception, err:
-        print err
-        print "Error: can't read file"
-
-    # Ejemplo para sacar titulos
-    for node in dom.getElementsByTagName('title'):
-        print node.firstChild.nodeValue
-
-    # Y muy importante: fechas
-    for node in dom.getElementsByTagName('gd:when'):
-        print "Inicio: "+node.attributes['startTime'].value+" - Fin: "+\
-              node.attributes['endTime'].value
+    for node in dom.getElementsByTagName('entry'):
+        dates = node.getElementsByTagName('gd:when')[0].attributes
+        results.append({
+            'origin': 'ForosTic',
+            'title': get_value("title", node),
+            'description': get_value("content", node),
+            'start_date': dates['startTime'].value,
+            'end_date': dates['endTime'].value,
+            'location': node.getElementsByTagName('gd:where')[0].nodeValue,
+            'geolocation': '',
+            'image': '',
+            'registration_url': ''
+        })
+    return results
 
 if __name__ == "__main__":
     get_events()

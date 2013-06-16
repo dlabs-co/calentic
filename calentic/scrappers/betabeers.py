@@ -34,7 +34,6 @@ REGISTRATION_URL:
 import mechanize
 from icalendar import Calendar, Event
 import json
-from collections import OrderedDict
 
 
 DATE_FORMAT = "%a %d-%m-%Y %H:%M"
@@ -49,6 +48,7 @@ def get_ics_calendar(url=URL):
     response = response.read()
     return response
 
+
 def get_events_from_calendar(ics):
     """
     Return a list with all events.
@@ -57,11 +57,12 @@ def get_events_from_calendar(ics):
     events = [event for event in calendar.walk() if isinstance(event, Event)]
     return events
 
-def set_json_content(events_list):
+
+def set_content(events_list):
     """
     Encode json from events.
     """
-    json_data = []
+    data = []
 
     for event in events_list:
         title = event.get("SUMMARY")
@@ -70,22 +71,27 @@ def set_json_content(events_list):
         end_date = event.get("DTEND").dt.strftime(DATE_FORMAT)
         location = event.get("LOCATION")
 
-        data = OrderedDict([('title', title),
-                            ('description', description),
-                            ('start_date', start_date),
-                            ('end_date', end_date),
-                            ('location', location)])
-        json_data.append(data)
+        data.append({
+            'title': title,
+            'description': description,
+            'start_date': start_date,
+            'end_date': end_date,
+            'location': location
+        })
+    return data
 
-    final_json = json.dumps(json_data, ensure_ascii=False,
-                            separators=(",", ":"), sort_keys=False)
-    return final_json
+
+def set_json_content(data):
+    return json.dumps(
+        data, ensure_ascii=False,
+        separators=(",", ":"), sort_keys=False
+    )
 
 
 def get_events():
     ics = get_ics_calendar(URL)
-    events = get_events_from_calendar(ics)
-    return set_json_content(events)
+    events = set_content(get_events_from_calendar(ics))
+    return events
 
 if __name__ == '__main__':
     get_events()

@@ -32,16 +32,25 @@ def main():
     """
 
     client = pymongo.MongoClient("localhost", 27017)
-    db = client.calentic
+    db = client.calentic.events
     for scrapper in calentic.scrappers.__all__:
         mod = getattr(calentic.scrappers, scrapper)
         events = getattr(mod, "get_events")()
         # TODO This is somehow how it should be, untested
         # Amazing, btw.
-        for event in events:
-            if not db.events.find({'title': event['title']}):
-                # Dont save events we already have.
-                db.events.save(event)
+        if events:
+            for event in events:
+                try:
+                    if not db.find_one({'title': event['title']}):
+                        # Dont save events we already have.
+                        print "Saving"
+                        db.insert(event)
+                except:
+                    print scrapper
+                    print event
+        else:
+            print "Could not get any event from: "
+            print mod
 
 if __name__ == "__main__":
     main()
