@@ -36,18 +36,17 @@ def main():
     for scrapper in calentic.scrappers.__all__:
         mod = getattr(calentic.scrappers, scrapper)
         events = getattr(mod, "get_events")()
-        # TODO This is somehow how it should be, untested
-        # Amazing, btw.
         if events:
             for event in events:
                 try:
                     if not db.find_one({'title': event['title']}):
-                        # Dont save events we already have.
-                        print "Saving"
                         db.insert(event)
+                    else:
+                        print "Event %s already inserted." % (event['title'])
                 except:
-                    print scrapper
-                    print event
+                    print "For some reason, event %s from %s did not work" % (
+                        scrapper, event
+                    )
         else:
             print "Could not get any event from: "
             print mod

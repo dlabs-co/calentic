@@ -21,38 +21,48 @@
 """
 
 from flask import Flask, render_template
-import json
+import json as _json
 from flask.ext.pymongo import PyMongo
+from bson.objectid import ObjectId
 
 APP = Flask(__name__)
 APP.config['MONGO_DBNAME'] = "calentic"
 MONGO = PyMongo(APP)
 
 
-@APP.route("/events/<start_date>/<end_date>/<place>")
-def index(start_date=None, end_date=None, place=None):
+class JSONEncoder(_json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return ""
+        return _json.JSONEncoder.default(self, o)
+
+
+@APP.route("/events/<path:route>")
+def index(route):
     """
         Returns filtered events.
-        <start_date>/<end_date>/place
-        if you want it to not look at some param, just use None
-        localhost/events/None/None/place
+        /events/elem=foo/elem=bar/elem=baz
     """
 
-    search_array = {}
-    if start_date and start_date != "None":
-        search_array['start_date'] = start_date
-    if end_date and end_date != "None":
-        search_array['end_date'] = end_date
-    if place and place != "None":
-        search_array['place'] = place
+    allowed_params = ["start_date", "end_date", "place", "origin"]
+    search = {}
+    for param_ in route.split("/"):
+        param = param_.split("=")
+        if param[0] in allowed_params:
+            search[param[0]] = param[1]
 
-    return json.dumps([ ev for ev in MONGO.db.events.find(
-        search_array
+    return JSONEncoder().encode([ev for ev in MONGO.db.events.find(
+        search
     )])
+
 
 @APP.route("/")
 def main():
-    return render_template('index.html')
+    return render_template(
+        'index.html',
+        events=JSONEncoder().encode([ev for ev in MONGO.db.events.find()])
+    )
+
 
 def server():
     """
