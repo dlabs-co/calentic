@@ -31,6 +31,9 @@ MONGO = PyMongo(APP)
 
 
 class JSONEncoder(_json.JSONEncoder):
+    """
+       Replacing
+    """
     def default(self, o):
         if isinstance(o, ObjectId):
             return ""
@@ -58,6 +61,9 @@ def index(route):
 
 @APP.route("/")
 def main():
+    """
+       Render template
+    """
     return render_template(
         'index.html',
         events=JSONEncoder().encode([ev for ev in MONGO.db.events.find()])
@@ -69,7 +75,7 @@ def server():
         Main server, this will be executed on command, and with wsgi.
         This way we could still execute it in debug mode from normal console
         execution
-    """
+     """
     APP.run(host='0.0.0.0', port=8080)
 
 if __name__ == "__main__":

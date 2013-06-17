@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="static/css/main.css">
 
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
+
         <style>
             .calendar_buttons{
                 margin-bottom:-30px;
@@ -47,7 +48,10 @@
             }
 
         </style>
-
+        <script src="{{url_for('static', filename='js/moment.min.js')}}"></script>
+        <script>
+            events = {{events|safe}};
+        </script>
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -134,20 +138,25 @@
         <script src="{{url_for('static', filename='js/jquery.simpleHtml5Calendar.js')}}"></script>
         <script>
             $(document).ready(function(){
-                $('#calendar_1').simpleHtml5Calendar(
-                    {
-                        lang:"es",
-                        day_contents: Array(
-                            {
-                                1:Array({
-                                        1:"1 <br/>Añadir eventos",
-                                        2:"2 <br/>Mas eventos",
-                                }),
-                                2:Array({ 3: "3 Ok", })
-                            }
-                        )
-                                }
-                ) ;
+                m={};
+                $(events).each(function(i, event){
+                    date = moment(event["end_date"]).toArray();
+                    if (!m[date[1]]){
+                        m[date[1]]={};
+                    }
+                    if (event['title'] && event['title'] != "undefined"){
+                        if(m[date[1]][date[2]]) {
+                            m[date[1]][date[2]] += event['title'];
+                        } else {
+                            m[date[1]][date[2]] = event['title'];
+                        }
+                    }
+                });
+                window.m = m;
+                $('#calendar_1').simpleHtml5Calendar({
+                    lang:"es",
+                    day_contents: Array(m),
+                });
             });
         </script>
 
