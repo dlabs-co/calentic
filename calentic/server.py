@@ -29,7 +29,11 @@ import calentic.scrappery
 
 
 APP = Flask(__name__)
-APP.config['MONGO_URI'] = os.environ["MONGOHQ_URL"]
+if "MONGOHQ_URL" in os.environ.keys():
+    APP.config['MONGO_URI'] = os.environ["MONGOHQ_URL"]
+else:
+    APP.config['MONGO_DB'] = "calentic"
+
 MONGO = PyMongo(APP)
 
 

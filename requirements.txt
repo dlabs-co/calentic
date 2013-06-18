@@ -6,3 +6,10 @@ mechanize
 icalendar
 pytz
 BeautifulSoup
+json
+mechanize
+icalendar
+xml.sax.saxutils
+urllib2
+BeautifulSoup
+xml
