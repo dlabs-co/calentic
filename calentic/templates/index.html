@@ -16,6 +16,20 @@
                 padding-top: 60px;
                 padding-bottom: 40px;
             }
+            .title{
+                float: left;
+                font-size: small;
+                font-weight: normal;
+            }
+            .day{
+                background: #18bc9c;
+                margin-top: -20px;
+                display: table-cell;
+                float: right;
+                width: 100%;
+                margin:0px;
+                padding-right: 8px;
+            }
         </style>
         <link rel="stylesheet"
                 href="{{url_for('static',filename='css/bootstrap-responsive.min.css')}}">
@@ -24,15 +38,22 @@
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
 
         <style>
+            #calendar_1{
+                margin-top: -60px;
+                margin-right: -50px;
+                margin-left: -50px;
+            }
             .calendar_buttons{
+                margin-left:40px;
                 margin-bottom:-30px;
                 font-size:4em; height:30px; padding-top:30px;
                 margin-bottom:-30px;
             }
             .month h1{ margin-left:60px; margin-top:-20px;}
             time {
+                float:left;
                 display: inline-block; width: 150px;
-                max-height:150px; overflow:auto;
+                height:150px; overflow:auto;
                 margin: 4px; text-align: right; font-size: normal;
                 font-weight: 900; border: 1px solid #c3c7c7;
                 border-radius: 5px; background: #fff;
@@ -45,6 +66,10 @@
             }
             .calendar_buttons a{
                 padding-top:20px!important; padding-bottom:20px!important;
+            }
+            .popover{
+                 white-space: pre;
+                min-width:400px;
             }
 
         </style>
@@ -78,8 +103,7 @@
         <div class="container">
 
             <!-- Main hero unit for a primary marketing message or call to action -->
-                <h1> Calendario de eventos TIC de aragón </h1>
-            <div class="hero-unit">
+                <div class="hero-unit" style="line-height:normal;">
                 <div id="calendar_1">
                     <ul class="nav nav-pills">
                         <li class="active calendar_buttons" style="margin-right:12em">
@@ -90,7 +114,7 @@
                         </li>
                     </ul>
                 </div>
-
+                <div style="clear:both"></div>
             </div>
 
             <!-- Example row of columns -->
@@ -137,26 +161,62 @@
         <script src="{{url_for('static', filename='js/main.js')}}"></script>
         <script src="{{url_for('static', filename='js/jquery.simpleHtml5Calendar.js')}}"></script>
         <script>
+            function build_html(event, old){
+                if (old.indexOf("span class=title") !== -1){
+                    a="<br/><hr/>"
+                } else {
+                    a="";
+                }
+                return a +
+                    '<span class=title>' +
+                    '<a href="#" onclick="return false;" data-toggle="popover" data-content="' +
+                    event['description'].replace(/['"]/g,'') +
+                    '">' +
+                    event['title'] +
+                    '</a></span>';
+            }
+
+
+            function build_days(day, old){
+                if (old.indexOf("span class=day") === -1){
+                    return '<span class=day>'+
+                    day +
+                    '</span>' +
+                    '';
+                } else {
+                    return "";
+                }
+            }
+
             $(document).ready(function(){
                 m={};
+
                 $(events).each(function(i, event){
                     date = moment(event["end_date"]).toArray();
-                    if (!m[date[1]]){
-                        m[date[1]]={};
-                    }
-                    if (event['title'] && event['title'] != "undefined"){
-                        if(m[date[1]][date[2]]) {
-                            m[date[1]][date[2]] += event['title'];
-                        } else {
-                            m[date[1]][date[2]] = event['title'];
-                        }
+                    date[1] = date[1] + 1;
+                    if (date[0] == "2013"){ // TODO Get current xD
+                        if (!m[date[1]]){ m[date[1]]={}; }
+                        if(!m[date[1]][date[2]]) { m[date[1]][date[2]] = ""; }
+                        m[date[1]][date[2]] += build_days(date[2],
+                            m[date[1]][date[2]]);
                     }
                 });
-                window.m = m;
+                $(events).each(function(i, event){
+                    date = moment(event["end_date"]).toArray();
+                    if (date[0] == "2013"){ // TODO Get current xD
+                        date[1] = date[1] + 1;
+                        if (!m[date[1]]){ m[date[1]]={}; }
+                        if(!m[date[1]][date[2]]) { m[date[1]][date[2]] = ""; }
+                        m[date[1]][date[2]] += build_html(event, m[date[1]][date[2]]);
+                    }
+                });
                 $('#calendar_1').simpleHtml5Calendar({
                     lang:"es",
                     day_contents: Array(m),
                 });
+                $('[data-toggle=popover]').popover({
+                        'trigger':'hover'
+                    })
             });
         </script>
 
