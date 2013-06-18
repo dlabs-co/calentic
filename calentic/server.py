@@ -25,6 +25,8 @@ import json as _json
 import os
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
+import calentic.scrappery
+
 
 APP = Flask(__name__)
 APP.config['MONGO_URI'] = os.environ["MONGOHQ_URL"]
@@ -59,6 +61,10 @@ def index(route):
         search
     )])
 
+
+@APP.route('/cron')
+def cron():
+    calentic.scrappery.main()
 
 @APP.route("/")
 def main():
