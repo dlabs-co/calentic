@@ -22,11 +22,13 @@
 
 from flask import Flask, render_template
 import json as _json
+import os
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 
 APP = Flask(__name__)
 APP.config['MONGO_DBNAME'] = "calentic"
+APP.config['MONGO_URL'] = os.environ["MONGOHQ_URL"]
 MONGO = PyMongo(APP)
 
 
