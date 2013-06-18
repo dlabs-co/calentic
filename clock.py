@@ -3,9 +3,9 @@ import calentic.scrappery
 
 sched = Scheduler()
 
-@sched.cron_schedule(day_of_week='mon-fri', hour=17)
+@sched.cron_schedule(day_of_week='mon-fri', hour=15)
 def scheduled_job():
-    scrappery.main()    
+    calentic.scrappery.main()    
 
 sched.start()
 
