@@ -1,4 +1,5 @@
 flask-pymongo
+flask
 gunicorn
 mechanize
 icalendar
