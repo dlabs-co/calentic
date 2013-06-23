@@ -21,11 +21,14 @@
 """
 
 from flask import Flask, render_template
-import json as _json
-import os
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
-import calentic.scrappery
+from calentic.scrappers import *
+
+import calentic.scrappers
+import json as _json
+import os
+import pymongo
 
 
 APP = Flask(__name__)
@@ -66,9 +69,28 @@ def index(route):
     )])
 
 
-@APP.route('/cron')
+@APP.route('/repopulate')
 def cron():
-    calentic.scrappery.main()
+    db = MONGO.calentic.events
+    for scrapper in calentic.scrappers.__all__:
+        mod = getattr(calentic.scrappers, scrapper)
+        events = getattr(mod, "get_events")()
+        if events:
+            for event in events:
+                try:
+                    if not db.find_one({'title': event['title']}):
+                        db.insert(event)
+                    else:
+                        print "Event %s already inserted." % (event['title'])
+                except:
+                    print "For some reason, event %s from %s did not work" % (
+                        scrapper, event
+                    )
+        else:
+            print "Could not get any event from: "
+            print mod
+
+
 
 @APP.route("/")
 def main():
@@ -77,7 +99,7 @@ def main():
     """
     return render_template(
         'index.html',
-        events=JSONEncoder().encode([ev for ev in MONGO.db.events.find()])
+        events=JSONEncoder().encode([ev for ev in MONGO.calentic.events.find()])
     )
 
 
