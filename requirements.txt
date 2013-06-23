@@ -6,6 +6,6 @@ gunicorn
 icalendar
 mechanize
 pytz
-urllib2
+urllib3
 xml
 xml.sax.saxutils
