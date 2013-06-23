@@ -4,7 +4,6 @@ flask
 flask-pymongo
 gunicorn
 icalendar
-json
 mechanize
 pytz
 urllib2
