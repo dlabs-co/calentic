@@ -2,8 +2,6 @@ apscheduler
 flask-pymongo
 flask
 gunicorn
-mechanize
-icalendar
 pytz
 BeautifulSoup
 json
