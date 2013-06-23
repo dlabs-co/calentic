@@ -71,7 +71,7 @@ def index(route):
 
 @APP.route('/repopulate')
 def cron():
-    db = MONGO.calentic.events
+    db = MONGO.db.events
     for scrapper in calentic.scrappers.__all__:
         mod = getattr(calentic.scrappers, scrapper)
         events = getattr(mod, "get_events")()
@@ -99,7 +99,7 @@ def main():
     """
     return render_template(
         'index.html',
-        events=JSONEncoder().encode([ev for ev in MONGO.calentic.events.find()])
+        events=JSONEncoder().encode([ev for ev in MONGO.db.events.find()])
     )
 
 
