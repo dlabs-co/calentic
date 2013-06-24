@@ -9,4 +9,3 @@ pytz
 urllib3
 beautifulsoup4
 lxml
-BeautifulSoup4
