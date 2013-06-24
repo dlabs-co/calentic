@@ -152,6 +152,7 @@
             <div id="sidr">
               <!-- Your content -->
               <ul>
+                  <li id="title"></li>
                   <li id="content"></li>
                   <li id="link"></li>
               </ul>
@@ -228,7 +229,12 @@
                     day_contents: Array(m),
                 });
                 $('[data-toggle=popover]').on('click', function(){
-                    console.log(this);
+                    if ($('#sidr').css('display') == "none"){
+                        $('#simple-menu').click();
+                    }
+                    $('#title').html($(this).text());
+                    $('#content').html($(this).attr('data-content'));
+                    $('#link').html("<a href=\""  + $(this).attr('href') + "> Fuente </a>");
                 });
             });
         </script>
