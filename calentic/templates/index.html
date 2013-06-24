@@ -40,6 +40,11 @@
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
 
         <style>
+            #sidr #title{
+font-size: 1.2em;
+line-height: 1.3em;
+text-align: center;
+            }
             #calendar_1{
                 margin-top: -60px;
                 margin-right: -50px;
@@ -234,7 +239,7 @@
                     }
                     $('#title').html($(this).text());
                     $('#content').html($(this).attr('data-content'));
-                    $('#link').html("<a href=\""  + $(this).attr('href') + "> Fuente </a>");
+                    $('#link').html("<a href=\""  + $(this).attr('href') + "\"> Fuente </a>");
                 });
             });
         </script>
