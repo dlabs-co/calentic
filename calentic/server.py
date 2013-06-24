@@ -97,8 +97,8 @@ def cron():
             errors += "%s" % mod
         return render_template(
             'repopulate.html',
-            errors,
-            events_
+            errors=errors,
+            events_=events_
         )
 
 
