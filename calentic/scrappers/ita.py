@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 from urllib2 import urlopen
@@ -54,12 +55,20 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
                             event_descriptions[BASE_URL + item["href"]] = str(description)
 
             
-            else:
-                event_descriptions[BASE_URL + item["href"]] = None
-        
+                
         else:
-            event_descriptions[BASE_URL + item["href"]] = None
-    
+            html2 = urlopen(BASE_URL + item["href"]).read()
+            soup = BeautifulSoup(html2, "lxml")
+            text = soup.find("div", "texto")
+            event_text = text.findAll("p")
+            selected_text = ""
+            for text in event_text:
+                selected_text += str(text)
+                selected_text += "\n"
+            
+            event_descriptions[BASE_URL + item["href"]] = selected_text
+            
+            
     for n in range(len(event_titles)):
         eventObject = {
             'title': event_titles[n], 
