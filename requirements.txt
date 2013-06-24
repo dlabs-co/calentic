@@ -7,3 +7,6 @@ icalendar
 mechanize
 pytz
 urllib3
+bs4
+lxml
+BeautifulSoup4
