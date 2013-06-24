@@ -28,7 +28,6 @@ from calentic.scrappers import *
 import calentic.scrappers
 import json as _json
 import os
-import pymongo
 
 
 APP = Flask(__name__)
@@ -75,21 +74,32 @@ def cron():
     for scrapper in calentic.scrappers.__all__:
         mod = getattr(calentic.scrappers, scrapper)
         events = getattr(mod, "get_events")()
+        errors = ""
+        events_ = ""
         if events:
             for event in events:
                 try:
                     if not db.find_one({'title': event['title']}):
                         db.insert(event)
+                        events_ += "<br/> Event %s inserted" % (
+                            event['title']
+                        )
                     else:
-                        print "Event %s already inserted." % (event['title'])
+                        errors += "<br/>Event %s already inserted." % (
+                            event['title']
+                        )
                 except:
-                    print "For some reason, event %s from %s did not work" % (
+                    errors += "<br/>For some reason, event %s - %s failed" % (
                         scrapper, event
                     )
         else:
-            print "Could not get any event from: "
-            print mod
-
+            errors += "Could not get any event from: "
+            errors += "%s" % mod
+        return render_template(
+            'repopulate.html',
+            errors,
+            events_
+        )
 
 
 @APP.route("/")
