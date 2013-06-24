@@ -35,6 +35,8 @@
                 href="{{url_for('static',filename='css/bootstrap-responsive.min.css')}}">
         <link rel="stylesheet" href="static/css/main.css">
 
+        <link rel="stylesheet" href="{{url_for('static', filename='css/jquery.sidr.dark.css')}}">
+
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
 
         <style>
@@ -145,6 +147,15 @@
                 </div>
             </div>
 
+            <a id="simple-menu" href="#sidr">Toogle menu</a>
+
+            <div id="sidr">
+              <!-- Your content -->
+              <ul>
+                  <li id="content"></li>
+                  <li id="link"></li>
+              </ul>
+            </div>
             <hr>
 
             <footer>
@@ -190,7 +201,9 @@
 
             $(document).ready(function(){
                 m={};
-
+                $('#simple-menu').sidr({
+                    side: 'right'
+                });
                 $(events).each(function(i, event){
                     date = moment(event["end_date"]).toArray();
                     date[1] = date[1] + 1;
@@ -214,9 +227,9 @@
                     lang:"es",
                     day_contents: Array(m),
                 });
-                $('[data-toggle=popover]').popover({
-                        'trigger':'hover'
-                    })
+                $('[data-toggle=popover]').on('click', function(){
+                    console.log(this);
+                });
             });
         </script>
 
@@ -228,5 +241,7 @@
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
             s.parentNode.insertBefore(g,s)}(document,'script'));
         </script>
+
+        <script src="{{url_for('static', filename='js/jquery.sidr.min.js')}}"></script>
     </body>
 </html>
