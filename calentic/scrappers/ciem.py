@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from calentic.scrappers.calendar_parser import CalendarParser
+
+
+from calendar_parser import CalendarParser
 
 
 """
