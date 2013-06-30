@@ -66,7 +66,10 @@ def _multi_replace(string, replace_dict):
 
 def _normalize(data_string, convert_whitespace=False):
     "Removes various markup artifacts and returns a normal python string."
-    new_string = unescape(str(data_string))
+    try:
+        new_string = unescape(str(data_string))
+    except UnicodeEncodeError:
+        new_string = unescape(unicode(data_string))        
     new_string = _multi_replace(new_string, {
         '&nbsp;': ' ', '&quot;': '"', '&brvbar;': '|', "&#39;": "'", "\\": ""
     })
