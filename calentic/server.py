@@ -70,37 +70,17 @@ def index(route):
 
 @APP.route('/repopulate')
 def cron():
-    db = MONGO.db.events
+    result = []
     for scrapper in calentic.scrappers.__all__:
-        mod = getattr(calentic.scrappers, scrapper)
-        events = getattr(mod, "get_events")()
-        errors = ""
-        events_ = ""
-        if events:
-            for event in events:
-                try:
-                    if not db.find_one({'title': event['title']}):
-                        db.insert(event)
-                        events_ += "<br/> Event %s inserted" % (
-                            event['title']
-                        )
-                    else:
-                        errors += "<br/>Event %s already inserted." % (
-                            event['title']
-                        )
-                except:
-                    errors += "<br/>For some reason, event %s - %s failed" % (
-                        scrapper, event
-                    )
-        else:
-            errors += "Could not get any event from: "
-            errors += "%s" % mod
-        return render_template(
-            'repopulate.html',
-            errors=errors,
-            events_=events_
-        )
-
+        events = getattr(getattr(calentic.scrappers, scrapper), "get_events")()
+        for event in events:
+            try:
+                if not MONGO.db.events.find_one({'title': event['title']}):
+                    MONGO.db.events.insert(event)
+                result.append("Event %s added" % event['title'])
+            except Exception, error:
+                result.append("Failed " + event['title' ] + ": " + error)
+        return _json.dumps(result)
 
 @APP.route("/")
 def main():
