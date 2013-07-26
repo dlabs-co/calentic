@@ -49,7 +49,7 @@ class JSONEncoder(_json.JSONEncoder):
         return _json.JSONEncoder.default(self, o)
 
 
-@APP.route("/events/<path:route>")
+@APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):
     """
         Returns filtered events.
@@ -63,9 +63,10 @@ def index(route):
         if param[0] in allowed_params:
             search[param[0]] = param[1]
 
-    return JSONEncoder().encode([ev for ev in MONGO.db.events.find(
-        search
-    )])
+    return JSONEncoder().encode(dict({
+        'events' : [ev for ev in MONGO.db.events.find(search)],
+        'success': True
+    }))
 
 
 @APP.route('/repopulate')
