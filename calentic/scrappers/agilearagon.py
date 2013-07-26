@@ -54,4 +54,4 @@ def get_events():
     return agile_events
 
 if __name__ == "__main__":
-    get_events()
+    print json.dumps(get_events())
