@@ -25,11 +25,12 @@ from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
 
+from dateutil import parser
 import calentic.scrappers
 import json as _json
 import datetime
+import time
 import os
-
 
 APP = Flask(__name__)
 if "MONGOHQ_URL" in os.environ.keys():
@@ -43,15 +44,17 @@ def format_event(ev):
     """
     """
     return {
-        "id"    : ev.id,
-        "title" : ev.title,
-        "url"   : ev.url,
-        "start" : ev.start_date,
-        "end"   : ev.end_date,
+        "id"    : 1,
+        "title" : ev['title'],
+        "url"   : 'http://google.com',
+        "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
+        "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
         "class" : 'event-warning'
     }
 
 def dateformat(date):
+
+    print datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
     return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
 
 class JSONEncoder(_json.JSONEncoder):
