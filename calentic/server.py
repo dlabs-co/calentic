@@ -20,13 +20,14 @@
 
 """
 
-from flask import Flask, render_template
+from flask import Flask, request, render_template
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
 
 import calentic.scrappers
 import json as _json
+import datetime
 import os
 
 
@@ -38,6 +39,20 @@ else:
 
 MONGO = PyMongo(APP)
 
+def format_event(ev):
+    """
+    """
+    return {
+        "id"    : ev.id,
+        "title" : ev.title,
+        "url"   : ev.url,
+        "start" : ev.start_date,
+        "end"   : ev.end_date,
+        "class" : 'event-warning'
+    }
+
+def dateformat(date):
+    return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
 
 class JSONEncoder(_json.JSONEncoder):
     """
@@ -60,14 +75,23 @@ def index(route):
     search = {}
     for param_ in route.split("/"):
         param = param_.split("=")
-        if param[0] in allowed_params:
+        if request.form['from']:
+            search["start_date"] = {
+                '$gt' : dateformat(request.form['from'])
+            }
+            search["end_date"] = {
+                '$lt'  : dateformat(request.form['to'])
+            }
+        elif param[0] in allowed_params:
             search[param[0]] = param[1]
-
-    return JSONEncoder().encode(dict({
-        'events' : [ev for ev in MONGO.db.events.find(search)],
-        'success': True
-    }))
-
+    events = [format_event(ev) for ev in MONGO.db.events.find(search)]
+    if len(events) > 0:
+        return JSONEncoder().encode(dict({
+            'events' : events,
+            'success': True
+        }))
+    else:
+        return ""
 
 @APP.route('/repopulate')
 def cron():
