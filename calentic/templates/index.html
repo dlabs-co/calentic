@@ -40,6 +40,11 @@
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
 
         <style>
+            #sidr #title{
+font-size: 1.2em;
+line-height: 1.3em;
+text-align: center;
+            }
             #calendar_1{
                 margin-top: -60px;
                 margin-right: -50px;
@@ -72,6 +77,14 @@
             .popover{
                  white-space: pre;
                 min-width:400px;
+            }
+            .sidr ul li {
+                line-height:1.2em;
+            }
+
+            .sidr ul li:hover {
+                line-height:1.2em;
+
             }
 
         </style>
@@ -122,10 +135,12 @@
             <!-- Example row of columns -->
             <div class="row">
                 <div class="span4">
-                    <h2>Multiples fuentes</h2>
-                    <li> Lista </li>
-                    <li> De </li>
-                    <li> Fuentes </li>
+                    <h2>Fuentes de datos actuales:</h2>
+                    <li> CIEM </li>
+                    <li> Agile Aragon </li>
+                    <li> BetaBeers </li>
+                    <li> ForosTIC </li>
+                    <li> ITA </li>
                 </div>
                 <div class="span4">
                     <h2>API</h2>
@@ -141,13 +156,15 @@
                     <p><a class="btn" href="#">Ver documentacion &raquo;</a></p>
                </div>
                 <div class="span4">
-                    <h2>Añade tu fuente</h2>
-                    <p> Envianos tu fuente de datos! </p>
-                    <p><a class="btn" href="#">Enviar &raquo;</a></p>
+                    <h3> Origen de datos </h3>
+                    <p> Calentic no organiza eventos, recojemos varias fuentes
+                        de datos y las colocamos de una forma amigable, para que
+                        todo el mundo pueda tener control de sus calendarios,
+                        además de exportar un JSON parseable y facilmente
+                        importable en otros calendarios (Y pronto un ICAL)
+                    </p>
                 </div>
             </div>
-
-            <a id="simple-menu" href="#sidr">Toogle menu</a>
 
             <div id="sidr">
               <!-- Your content -->
@@ -155,9 +172,13 @@
                   <li id="title"></li>
                   <li id="content"></li>
                   <li id="link"></li>
+                  <li id="source"></li>
+                  <li id="close"> <a href="#" onclick="$('#simple-menu').click(); return false">Cerrar </a>
               </ul>
             </div>
             <hr>
+
+            <a id="simple-menu" href="#sidr"></a>
 
             <footer>
                 <p>&copy; Python User Group Zaragoza 2013</p>
@@ -181,9 +202,10 @@
                 }
                 return a +
                     '<span class=title>' +
-                    '<a href="#" onclick="return false;" data-toggle="popover" data-content="' +
+                    '<a href="#" data-toggle="calendar" onclick="return false;" '+
+                    'data-content="' +
                     event['description'].replace(/['"]/g,'') +
-                    '">' +
+                    '" data-source="' +event['origin'] + '" >' +
                     event['title'] +
                     '</a></span>';
             }
@@ -228,13 +250,15 @@
                     lang:"es",
                     day_contents: Array(m),
                 });
-                $('[data-toggle=popover]').on('click', function(){
+                $('[data-toggle=calendar]').on('click', function(){
                     if ($('#sidr').css('display') == "none"){
                         $('#simple-menu').click();
                     }
                     $('#title').html($(this).text());
                     $('#content').html($(this).attr('data-content'));
-                    $('#link').html("<a href=\""  + $(this).attr('href') + "> Fuente </a>");
+                    $('#link').html("<a href=\""  + $(this).attr('href') + "\"> Ir al articulo original </a>");
+                    $('#source').html("<a href=# >Origen:" +
+                            $(this).attr('data-source') + "</a>");
                 });
             });
         </script>
