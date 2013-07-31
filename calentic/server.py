@@ -78,7 +78,7 @@ def index(route):
     search = {}
     for param_ in route.split("/"):
         param = param_.split("=")
-        if request.form['from']:
+        if "from" in request.form.values():
             search["start_date"] = {
                 '$gt' : dateformat(request.form['from'])
             }
