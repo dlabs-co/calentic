@@ -9,4 +9,4 @@ pytz
 urllib3
 beautifulsoup4
 lxml
-dateutil
+python-dateutil
