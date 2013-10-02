@@ -108,7 +108,7 @@ def cron():
                 result.append("Event %s added" % event['title'])
             except Exception, error:
                 result.append("Failed " + event['title' ] + ": " + error)
-        return _json.dumps(result)
+    return _json.dumps(result)
 
 @APP.route("/")
 def main():

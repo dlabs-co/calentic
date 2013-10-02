@@ -151,9 +151,6 @@ if(!String.prototype.format) {
         // Get all events between start and end
         var start = parseInt(this.options.position.start.getTime());
         var end = parseInt(this.options.position.end.getTime());
-
-            console.log(this.options.events);
-            console.log("OOOOK");
         if (this.options.events) {
         $.each(this.options.events, function(k, event) {
             if((parseInt(event.start) <= end) && (parseInt(event.end) >= start)) {
@@ -239,8 +236,6 @@ if(!String.prototype.format) {
         var end = parseInt(new Date(this.options.position.start.getFullYear(), month + 1, 0, 0, 0, 0).getTime());
         var events = [];
 
-            console.log(this.options.events);
-            console.log("OOOOK");
         if (this.options.events) {
         $.each(this.options.events, function(k, event) {
             if((parseInt(event.start) <= end) && (parseInt(event.end) >= start)) {
@@ -306,7 +301,8 @@ if(!String.prototype.format) {
 
 
         if (this.options.events) {
-        $.each(this.options.events, function(k, event) {
+            window.events = this.options.events;
+        $.each(this.options.events.events, function(k, event) {
             if((parseInt(event.start) < end) && (parseInt(event.end) > start)) {
                 events.push(event);
             }
@@ -518,17 +514,14 @@ if(!String.prototype.format) {
         var self = this;
         this.options.onBeforeEventsLoad(function() {
             $.ajax({
-                url: self.options.events_url,
+                url: self.options.events_url + "/from="+self.options.position.start.getTime() + "/to="+self.options.position.end.getTime(),
                 data: {
                     from: self.options.position.start.getTime(),
                     to: self.options.position.end.getTime()
                 }
             }).done(function(json) {
-                    if(!json.success) {
-                        $.error(json.error);
-                    }
-                    self.options.events = json.result;
-                    self.options.onAfterEventsLoad(json.result);
+                    self.options.events = json;
+                    self.options.onAfterEventsLoad(json);
                 });
         });
     };
