@@ -41,9 +41,9 @@ def get_events():
             'title': getValue(event, "name"),
             'description': getValue(event, 'description'),
             'start_date': getValue(event, ' start_time'),
-            'url' : getValue(event, 'registration_url'),
+            'url' : getValue(event, 'http://ciemzaragoza.es'),
             'end_date': getValue(event, 'end_time'),
-            'location': getValue(event, 'location'),
+            'location': "CIEM Zaragoza - Avenida de la autonomía 7",
             'origin_url' : "http://ciemzaragoza.es",
         })
 

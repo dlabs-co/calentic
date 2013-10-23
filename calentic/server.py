@@ -43,14 +43,35 @@ MONGO = PyMongo(APP)
 def format_event(ev):
     """
     """
-    if "origin_url" in ev:
-        url = ev['origin_url']
+
+    description = ev['description'],
+
+    print ev
+    if "url" in ev:
+        url = ev['url']
     else:
-        url = "#"
+        print ev
+        if "description" in ev:
+            if ev['description']:
+                url = ev['description']
+            else:
+                if 'origin_url' in ev:
+                    url = ev['origin_url']
+                else:
+                    url = "#"
+            description = "Ver enlace:"
+        else:
+            url = ev['origin_url']
+    if "location" in ev and ev['location']:
+        location = "Lugar: " + ev['location']
+    else:
+        location = "desconocido"
     return {
         "title" : ev['title'] + "(<a href='"+url+"'>" + ev['origin'] + "</a>)",
         "url"   : '/event/' + str(ev['_id']),
-        'description': ev['description'],
+        "external-url" : url,
+        'location' : location,
+        'description': description,
         "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
         "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
         "class" : 'event-warning'
@@ -62,7 +83,7 @@ def dateformat(date):
     return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
 
 class JSONEncoder(_json.JSONEncoder):
-    """ 
+    """
        Replacing
     """
     def default(self, o):
@@ -73,13 +94,14 @@ class JSONEncoder(_json.JSONEncoder):
 @APP.route('/event/<oid>', methods=["POST", "GET"])
 def event(oid):
     events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
-    return "<div><h1>" + events[0]['title'] +"</h1><p>" + events[0]['description'] + "</p>" + \
-        "<a href=" + events[0]['external-url'] + ">" + events[0]['external-url'] + "</a>"
-    return JSONEncoder().encode(events)
+    url = ""
+    if events[0]['external-url']:
+        url = "<a href='" + events[0]['external-url'] + "'>" + events[0]['external-url'] + "</a>"
+    return "<div><h1>" + events[0]['title'] +"</h1><address>"+events[0]["location"]+"</address><p>" + events[0]['description'] + "</p>" + url
 
 @APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):
-    """ 
+    """
         Returns filtered events.
         /events/elem=foo/elem=bar/elem=baz
     """
@@ -106,7 +128,7 @@ def index(route):
     else:
         return ""
 
-@APP.route('/repopulate ')
+@APP.route('/repopulate')
 def cron():
     result = []
     for scrapper in calentic.scrappers.__all__:

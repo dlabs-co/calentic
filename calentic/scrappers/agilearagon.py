@@ -32,12 +32,12 @@ def get_events():
             eventAgile = {
                 'origin': 'Agile Aragón',
                 'title': event['name'],
-                'description': event['description'],
+                'description': "Más información <a href='" + event['description'] +"'>aquí</a>",
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
-                'url' : str(event['registration_url'])
+                'url' : str(event['registration_url']),
                 'location': event['location'],
-                'origin_url' : ics_url,
+                'origin_url' : "http://agile-aragon.com",
             }
 
             agile_events.append(eventAgile)
