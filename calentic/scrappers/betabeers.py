@@ -72,6 +72,8 @@ def set_content(events_list):
         location = event.get("LOCATION")
 
         data.append({
+            'origin' : "betabeers",
+            'origin_url' : "http://www.betabeers.com", 
             'title': title,
             'description': description,
             'start_date': start_date,

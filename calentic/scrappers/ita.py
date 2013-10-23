@@ -76,6 +76,7 @@ def get_events(section_url = "http://www.ita.es/ita/?eventos"):
             'start_date': event_dates[n], 
             'registration_url': event_links[n],
             'origin': 'ITA',
+            'origin_url' : BASE_URL,
             }
         
         if eventObject in ita_events:

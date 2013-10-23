@@ -43,10 +43,14 @@ MONGO = PyMongo(APP)
 def format_event(ev):
     """
     """
+    if "origin_url" in ev:
+        url = ev['origin_url']
+    else:
+        url = "#"
     return {
-        "id"    : 1,
-        "title" : ev['title'],
-        "url"   : 'http://google.com',
+        "title" : ev['title'] + "(<a href='"+url+"'>" + ev['origin'] + "</a>)",
+        "url"   : '/event/' + str(ev['_id']),
+        'description': ev['description'],
         "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
         "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
         "class" : 'event-warning'
@@ -66,6 +70,10 @@ class JSONEncoder(_json.JSONEncoder):
             return ""
         return _json.JSONEncoder.default(self, o)
 
+@APP.route('/event/<oid>', methods=["GET"])
+def event(oid):
+    events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
+    return JSONENCODER().encode(events)
 
 @APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):

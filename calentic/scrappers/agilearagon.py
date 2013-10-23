@@ -36,6 +36,7 @@ def get_events():
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
                 'location': event['location'],
+                'origin_url' : ics_url,
             }
 
             agile_events.append(eventAgile)

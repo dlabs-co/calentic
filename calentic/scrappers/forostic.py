@@ -31,9 +31,7 @@ def get_events():
             'start_date': dates['startTime'].value,
             'end_date': dates['endTime'].value,
             'location': node.getElementsByTagName('gd:where')[0].nodeValue,
-            'geolocation': '',
-            'image': '',
-            'registration_url': ''
+            'origin_url' : BASE_URL,
         })
     return results
 
