@@ -39,9 +39,7 @@
 
 
         <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
-        <script>
-            events = {{events|safe}};
-        </script>
+
     </head>
     <body data-spy="scroll" data-target=".navbar">
         <!--[if lt IE 7]>
@@ -62,6 +60,19 @@
                         </ul>
                     </div><!--/.nav-collapse -->
                 </div>
+            </div>
+        </div>
+
+        <div id="event" class="modal hide fade" tabindex="-1" role="dialog">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h3>Detalles del evento</h3>
+            </div>
+            <div class="modal-body">
+                <p>My modal content here…</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
 
@@ -127,6 +138,28 @@
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <script>
+            function do_hack_links(that){
+                if ($(this).attr('data-href') != "#") {
+                    $(that).attr('data-href', $(that).attr('href'));
+                    $(that).attr('href', '#');
+                    console.log("HACK");
+                    console.log(that);
+                }
+
+                $(that).click(
+                    function(){
+                        console.log(that);
+                        var href=$(that).attr('data-href');
+                        console.log(href);
+                        $('.modal-body').load(href, function(result){ $('#event').modal({show:true});});
+                        return false;
+                    }
+                );
+            }
+        </script>
+
+
 
         <script src="{{url_for('static', filename='js/vendor/bootstrap.min.js')}}"></script>
 
@@ -139,8 +172,17 @@ filename='bootstrap-calendar/js/vendor/underscore-min.js')}}"></script>
 filename='bootstrap-calendar/js/calendar.js')}}"></script>
 
         <script>
-            $('#calendar_1').calendar({events_url:'/events/all',
-                    'tmpl_path':'/static/bootstrap-calendar/tmpls/'})
+            $('#calendar_1').calendar({
+                events_url:'/events/all',
+                'tmpl_path':'/static/bootstrap-calendar/tmpls/',
+                'onAfterEventsLoad' : function(){
+                window.setTimeout(function(){
+                    jQuery('a[href^="/event/"]').each(function(){
+                        do_hack_links(this);
+                    });
+                    }, 1000);
+                }
+            })
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';

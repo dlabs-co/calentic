@@ -520,9 +520,9 @@ if(!String.prototype.format) {
                     to: self.options.position.end.getTime()
                 }
             }).done(function(json) {
-                    self.options.events = json;
-                    self.options.onAfterEventsLoad(json);
-                });
+                self.options.events = json;
+                self.options.onAfterEventsLoad(json);
+            });
         });
     };
     Calendar.prototype._loadTemplate = function(name) {
@@ -657,6 +657,11 @@ if(!String.prototype.format) {
             $('a.event-item').mouseleave(function() {
                 $('div.cal-span1').removeClass('day-highlight dh-' + $(this).data('event-class'));
             });
+
+            jQuery('#cal-slide-content a[href^="/event/"]').each(function(){
+                do_hack_links(this);
+            });
+
         });
     };
 

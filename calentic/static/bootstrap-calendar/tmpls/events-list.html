@@ -4,7 +4,7 @@
 		<% _.each(events, function(event){ %>
 			<li>
 				<span class="pull-left event <%= $(event).data('event-class') %>"></span>&nbsp;
-				<a href="<%= $(event).attr('href') %>" data-event-id="<%= $(event).data('event-id') %>"
+				<a href="<%= $(event).attr('data-href') %>" data-event-id="<%= $(event).data('event-id') %>"
 						data-event-class="<%= $(event).data('event-class') %>" class="event-item">
 					<%= $(event).data('original-title') %></a>
 			</li>

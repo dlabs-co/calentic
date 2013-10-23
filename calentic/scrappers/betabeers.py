@@ -70,12 +70,14 @@ def set_content(events_list):
         start_date = event.get("DTSTART").dt.strftime(DATE_FORMAT)
         end_date = event.get("DTEND").dt.strftime(DATE_FORMAT)
         location = event.get("LOCATION")
+        url = event.get('REGISTRATION_URL')
 
         data.append({
             'origin' : "betabeers",
-            'origin_url' : "http://www.betabeers.com", 
+            'origin_url' : "http://www.betabeers.com",
             'title': title,
-            'description': description,
+            'url' : description,
+            'description': "",
             'start_date': start_date,
             'end_date': end_date,
             'location': location
@@ -96,4 +98,4 @@ def get_events():
     return events
 
 if __name__ == '__main__':
-    get_events()
+    print get_events()

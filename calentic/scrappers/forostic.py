@@ -23,9 +23,11 @@ def get_events():
     results = []
 
     for node in dom.getElementsByTagName('entry'):
+        print node.getElements
         dates = node.getElementsByTagName('gd:when')[0].attributes
         results.append({
             'origin': 'ForosTic',
+            'url' : False,
             'title': get_value("title", node),
             'description': get_value("content", node),
             'start_date': dates['startTime'].value,

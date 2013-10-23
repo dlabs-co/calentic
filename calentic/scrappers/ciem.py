@@ -41,6 +41,7 @@ def get_events():
             'title': getValue(event, "name"),
             'description': getValue(event, 'description'),
             'start_date': getValue(event, ' start_time'),
+            'url' : getValue(event, 'registration_url'),
             'end_date': getValue(event, 'end_time'),
             'location': getValue(event, 'location'),
             'origin_url' : "http://ciemzaragoza.es",

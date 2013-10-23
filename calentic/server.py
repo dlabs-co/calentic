@@ -62,7 +62,7 @@ def dateformat(date):
     return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
 
 class JSONEncoder(_json.JSONEncoder):
-    """
+    """ 
        Replacing
     """
     def default(self, o):
@@ -70,14 +70,16 @@ class JSONEncoder(_json.JSONEncoder):
             return ""
         return _json.JSONEncoder.default(self, o)
 
-@APP.route('/event/<oid>', methods=["GET"])
+@APP.route('/event/<oid>', methods=["POST", "GET"])
 def event(oid):
     events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
-    return JSONENCODER().encode(events)
+    return "<div><h1>" + events[0]['title'] +"</h1><p>" + events[0]['description'] + "</p>" + \
+        "<a href=" + events[0]['external-url'] + ">" + events[0]['external-url'] + "</a>"
+    return JSONEncoder().encode(events)
 
 @APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):
-    """
+    """ 
         Returns filtered events.
         /events/elem=foo/elem=bar/elem=baz
     """
@@ -104,7 +106,7 @@ def index(route):
     else:
         return ""
 
-@APP.route('/repopulate')
+@APP.route('/repopulate ')
 def cron():
     result = []
     for scrapper in calentic.scrappers.__all__:

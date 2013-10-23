@@ -35,6 +35,7 @@ def get_events():
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
+                'url' : str(event['registration_url'])
                 'location': event['location'],
                 'origin_url' : ics_url,
             }
