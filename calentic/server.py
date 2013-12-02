@@ -78,8 +78,9 @@ def format_event(ev):
     }
 
 def dateformat(date):
-
-    print datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
+    """
+        Format date.
+    """
     return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
 
 class JSONEncoder(_json.JSONEncoder):
