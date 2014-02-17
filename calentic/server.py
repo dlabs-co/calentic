@@ -133,6 +133,7 @@ def index(route):
 def cron():
     result = []
     for scrapper in calentic.scrappers.__all__:
+        print scrapper
         events = getattr(getattr(calentic.scrappers, scrapper), "get_events")()
         for event in events:
             try:
