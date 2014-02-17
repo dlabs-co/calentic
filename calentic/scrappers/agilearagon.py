@@ -31,13 +31,14 @@ def get_events():
         try:
             eventAgile = {
                 'origin': 'Agile Aragón',
+                'bad_description': True,
                 'title': event['name'],
                 'description': "Más información <a href='" + event['description'] +"'>aquí</a>",
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
                 'url' : str(event['registration_url']),
-                'location': event['location'],
-                'origin_url' : "http://agile-aragon.com",
+                'location': str(event['location']),
+                'origin_url' : "http://agile-aragon.org",
             }
 
             agile_events.append(eventAgile)
@@ -49,6 +50,7 @@ def get_events():
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
+                'origin_url' : "http://agile-aragon.org",
             }
 
             agile_events.append(eventAgile)

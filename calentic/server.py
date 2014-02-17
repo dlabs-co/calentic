@@ -65,7 +65,7 @@ def format_event(ev):
     if "location" in ev and ev['location']:
         location = "Lugar: " + ev['location']
     else:
-        location = "desconocido"
+        location = "Lugar desconocido"
     return {
         "title" : ev['title'] + "(<a href='"+url+"'>" + ev['origin'] + "</a>)",
         "url"   : '/event/' + str(ev['_id']),
@@ -133,15 +133,23 @@ def index(route):
 def cron():
     result = []
     for scrapper in calentic.scrappers.__all__:
-        print scrapper
-        events = getattr(getattr(calentic.scrappers, scrapper), "get_events")()
-        for event in events:
-            try:
-                if not MONGO.db.events.find_one({'title': event['title']}):
-                    MONGO.db.events.insert(event)
-                result.append("Event %s added" % event['title'])
-            except Exception, error:
-                result.append("Failed " + event['title' ] + ": " + error)
+        try:
+            events = getattr(
+                getattr(calentic.scrappers, scrapper), "get_events"
+            )()
+            for event in events:
+                try:
+                    if not MONGO.db.events.find_one({'title': event['title']}):
+                        MONGO.db.events.insert(event)
+                    result.append("Event %s added" % event['title'])
+                except Exception, error:
+                    result.append("Failed " + event['title' ] + ": " + error)
+
+        except Exception, err:
+            print "Error happened while trying to retrieve %s events:%s" % (
+                scrapper, err
+            )
+            continue
     return _json.dumps(result)
 
 @APP.route("/")

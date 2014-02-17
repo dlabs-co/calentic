@@ -55,7 +55,7 @@ def _fix_timezone(datetime_obj, time_zone):
 
     elif type(datetime_obj) is date:
         return datetime(datetime_obj.year, datetime_obj.month, datetime_obj.day)
-    
+
     return datetime_obj
 
 def _multi_replace(string, replace_dict):
@@ -69,7 +69,7 @@ def _normalize(data_string, convert_whitespace=False):
     try:
         new_string = unescape(str(data_string))
     except UnicodeEncodeError:
-        new_string = unescape(unicode(data_string))        
+        new_string = unescape(unicode(data_string))
     new_string = _multi_replace(new_string, {
         '&nbsp;': ' ', '&quot;': '"', '&brvbar;': '|', "&#39;": "'", "\\": ""
     })
@@ -77,7 +77,7 @@ def _normalize(data_string, convert_whitespace=False):
 
     if convert_whitespace:
         return " ".join(new_string.split())
-        
+
     return new_string
 
 
@@ -95,23 +95,23 @@ class CalendarEvent(dict):
     """
     __slots__ = ( "name", "description", "location", "start_time", "end_time", "all_day",
                   "repeats", "repeat_freq", "repeat_day", "repeat_month", "repeat_until" )
-    
+
     def __getattr__(self, key):
         if key in self.__slots__:
             return self[key]
         else:
             return dict.__getattribute__(self, key)
-        
+
     def __setattr__(self, key, value):
         if key in self.__slots__:
             self[key] = value
         else:
             raise AttributeError("dict attributes are not modifiable.")
-        
+
     def __lt__(self, other):
         assert type(other) is CalendarEvent, "Both objects must be CalendarEvents to compare."
         return self["start_time"] < other["start_time"]
-    
+
     def __le__(self, other):
         assert type(other) is CalendarEvent, "Both objects must be CalendarEvents to compare."
         return self["start_time"] <= other["start_time"]
@@ -161,11 +161,11 @@ class CalendarParser(object):
     def __contains__(self, item):
         if type(item) is not str:
             return item in self.events
-        
+
         for event in self.events:
             if event["name"].lower() == item.lower():
                 return True
-            
+
         return False
 
     def __getitem__(self, item):
@@ -174,7 +174,7 @@ class CalendarParser(object):
             for event in self.events:
                 if event["name"].lower() == item.lower():
                     event_list.append(event)
-                
+
             if len(event_list) == 0:
                 raise LookupError("'%s' is not an event in this calendar." % (item))
             if len(event_list) == 1:
@@ -232,11 +232,11 @@ class CalendarParser(object):
 
     def parse_xml(self, overwrite_events=True):
         "Returns a generator of Event dictionaries from an XML atom feed."
-        
+
         assert self.xml_url or self.xml_url, "No xml resource has been set."
         self.calendar = self.fetch_calendar(force_xml=True).contents[1]
         metadata = self.calendar.contents[1:3]
-        
+
         self.title = metadata[1].contents[0].contents[0]
         self.subtitle = metadata[1].contents[1].next
         self.author = metadata[1].contents[6].next.next.next
@@ -245,12 +245,12 @@ class CalendarParser(object):
         self.last_updated = _parse_time(metadata[0].next)
         self.date_published = _parse_time(
             metadata[1].contents[6].contents[5].next.next.contents[1].next)
-        
+
         raw_events = self.calendar.contents[3:]
 
         if overwrite_events:
             self.events = []
-        
+
         for event in raw_events:
             event_dict = CalendarEvent()
             event_dict["name"] = _normalize(event.next.next)
@@ -282,7 +282,7 @@ class CalendarParser(object):
                     elif "Duration:" in content:
                         seconds = int(content.split()[-1])
                         event_dict["end_time"] = event_dict["start_time"] + timedelta(seconds=seconds)
-                        
+
 
                 elif "When: " in content:
                     when = event.contents[1].next.replace("When: ", "", 1)
@@ -306,7 +306,7 @@ class CalendarParser(object):
                         event_dict["end_time"] = event_dict["start_time"] + timedelta(days=1)
                     else:
                         event_dict["all_day"] = False
-                    
+
 
                 elif "Where: " in content:
                     event_dict["location"] = _normalize(content).replace("Where: ", "")
@@ -319,7 +319,7 @@ class CalendarParser(object):
 
             yield event_dict
 
-                
+
     def parse_ics(self, overwrite_events=True):
         "Returns a generator of Event dictionaries from an iCal (.ics) file."
         assert self.ics_url or self.ics_url, "No ics resource has been set."
@@ -327,7 +327,7 @@ class CalendarParser(object):
         # Returns an icalendar.Calendar object.
         self.fetch_calendar(force_ics=True)
 
-        self.time_zone = timezone(str(self.calendar["x-wr-timezone"]))
+        self.time_zone = timezone("Europe/Madrid")
         self.title = str(self.calendar["x-wr-calname"])
 
         if overwrite_events:
@@ -346,7 +346,7 @@ class CalendarParser(object):
                     event_dict["start_time"] = _fix_timezone(event["dtstart"].dt, self.time_zone)
                 if "DTEND" in event:
                     event_dict["end_time"] = _fix_timezone(event["dtend"].dt, self.time_zone)
-                
+
                 event_dict["repeats"] = False
                 if "RRULE" in event:
                     rep_dict = event["RRULE"]
@@ -387,10 +387,10 @@ class CalendarParser(object):
         generator = None
         if (self.ics_url or self.ics_file) and (use_ics or not use_xml):
             generator = self.parse_ics(overwrite_events)
-            
+
         elif (self.xml_url or self.xml_file) and (use_xml or not use_ics):
             generator = self.parse_xml(overwrite_events)
-            
+
         if force_list:
             return [event for event in generator]
         else:
