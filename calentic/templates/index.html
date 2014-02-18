@@ -6,9 +6,14 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Calentic - calendario de eventos TIC en aragón</title>
-        <meta name="description" content="Calendario de eventos TIC en aragón">
+        <title>Hub de eventos tecnológicos en zaragoza</title>
+        <meta name="description" content="Hub de eventos tecnológicos en zaragoza">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/datejs/1.0/date.min.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Kreon:300,400'
+        rel='stylesheet' type='text/css'>
         <meta name="viewport" content="width=device-width">
+        <link href='http://fonts.googleapis.com/css?family=Exo+2'
+        rel='stylesheet' type='text/css'>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <link rel="stylesheet" href="{{url_for('static', filename='bootstrap-calendar/css/calendar.css')}}">
         <link rel="stylesheet"  href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css">
@@ -30,19 +35,22 @@
         </div>
 
         <div class="container">
-            <h1 class="text-center text-danger"> ZgzTechHub </h1>
+            <h1 class="text-center text-danger"> Zaragoza Tecnológica </h1>
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="row">
-                <h2> Eventos proximos </h2>
+                <br/>
+                <br/>
+                <br/>
                 <div class="col-md-12" id="events_top"></div>
             </div>
 
             <div class="row">
                 <div class=col-md-12>
-                    <p class="lead" style="margin-top:60px">
-                        Presentación del HUB, un poco de historia ( mención al PUG, mención a dlabs ).
+                    <p class="lead text-center" style="margin-top:60px">
+                        Este HUB centraliza los eventos tecnológicos de toda la
+                        ciudad de zaragoza.<br/>
                     </p>
-                </div>
+               </div>
             </div>
 
 
@@ -57,60 +65,81 @@
                 </div>
             </div>
 
-            <div class="row" style="margin-top:50px">
+            <p class="lead text-center" style="margin-top:60px">
+            <br/>
+            <br/>
+                Puedes suscribirte a las listas de correo, el twitter y el
+                facebook para recibir actualizaciones periodicas sobre los
+                eventos.
+            </p>
+
+
+            <div class="row" style="margin-top:0px">
                 <div class="col-md-8 col-md-offset-2">
-                    <div class="col-md-4">
+                    <div class="col-md-3 margin-left">
+                        <a href="">
                         <img class="img-responsive" src="{{url_for('static', filename='img/google.png')}}" />
+                    </a>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 margin-left">
                         <img class="img-responsive" src="{{url_for('static',
                         filename='img/facebook.svg')}}" />
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 margin-left">
                         <img class="img-responsive" src="{{url_for('static',
                         filename='img/twitter.png')}}" />
                     </div>
                 </div>
             </div>
-            <footer>
-                <h4> Con la colaboración de </h4>
-                <div class=row>
-                    <div class="col-md-offset-2 col-md-2">
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/dlabs.png')}}" />
-                    </div>
-
-                    <div class=col-md-2>
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/bb.png')}}" />
-                    </div>
-
-                    <div class=col-md-2>
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/guifi.png')}}" />
-                    </div>
-
-                    <div class=col-md-2>
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/agile.png')}}" />
-                    </div>
-                </div>
-                <br/>
-               <div class=row>
-                    <div class="col-md-offset-2 col-md-2">
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/python.png')}}" />
-                    </div>
-
-                    <div class=col-md-2>
-                        <img class=img-responsive src="{{url_for('static',
-                        filename='img/zagales.png')}}" />
-                    </div>
-                </div>
-
-
-            </footer>
         </div> <!-- /container -->
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <footer>
+            <h2> Con la colaboración de </h2>
+            <br/>
+            <div class=row>
+                <div class="col-md-offset-2 col-md-2">
+                    <a href="http://www.dlabs.co"><img class=img-responsive src="{{url_for('static',
+                        filename='img/dlabs.png')}}" /></a>
+                </div>
+
+                <div class=col-md-2><a href="http://www.betabeers.com">
+                    <img class=img-responsive src="{{url_for('static',
+                    filename='img/bb.png')}}" /></a>
+                </div>
+
+                <div class=col-md-2><a href="http://aragon.guifi.net" />
+                    <img class=img-responsive src="{{url_for('static',
+                    filename='img/guifi.png')}}" /></a>
+                </div>
+
+                <div class=col-md-2><a href="http://agile-aragon.org">
+                    <img class=img-responsive src="{{url_for('static',
+                    filename='img/agile.png')}}" /></a>
+                </div>
+            </div>
+            <br/>
+            <div class=row>
+                <div class="col-md-offset-2 col-md-2"><a
+                        href="https://plus.google.com/communities/103281359456269063508">
+                    <img class=img-responsive src="{{url_for('static',
+                    filename='img/python.png')}}" /></a>
+                </div>
+
+                <div class=col-md-2><a href="zagales-hacklab.org">
+                    <img class=img-responsive src="{{url_for('static',
+                    filename='img/zagales.png')}}" /></a>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        </footer>
+
 
         <script src="{{url_for('static', filename='js/main.js')}}"></script>
         <script src="{{url_for('static', filename='bootstrap-calendar/js/language/en-GB.js')}}"></script>

@@ -24,9 +24,14 @@ function get_soon_calendar() {
         function(data){
             data=JSON.parse(data);
             $(data.events).each(function(){
-                $('#events_top').append("<div class=col-md-4>" + this.title + "</div>" );
+                console.log(this);
+                $('#events_top').append(
+                    "<div class=col-md-3>"+
+                    "<span class=date>" + new Date(this.start).toString("dd/MM/yy HH:mm") +  "</span>" +
+                    "<h4>" + this.title + "</h4>" +
+                    "</div>" );
             });
-            $('#events_top').append("<div class=col-md-4><a href='/create_event'>Añadir un evento </a></div>");
+            $('#events_top').append("<div class=col-md-3><h3 class=addnew><a href='/create_event'>Añadir un evento </a></h3></div>");
         }
     );
 }
