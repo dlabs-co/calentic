@@ -41,6 +41,11 @@ footer {
         margin-left:130px;
     }
 }
+@media (max-width:641px) {
+    .row .col-md-12>.col-md-3:first-child{
+        margin-bottom:20px;
+    }
+}
 .day{
     background: #18bc9c;
     margin-top: -20px;
