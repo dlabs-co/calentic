@@ -9,60 +9,13 @@
         <title>Calentic - calendario de eventos TIC en aragón</title>
         <meta name="description" content="Calendario de eventos TIC en aragón">
         <meta name="viewport" content="width=device-width">
-
-        <link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
-        <link rel="stylesheet" href="{{url_for('static',
-        filename='bootstrap-calendar/css/calendar.css')}}">
-        <style>
-            body {
-                padding-top: 60px;
-                padding-bottom: 40px;
-            }
-            .title{
-                float: left;
-                font-size: small;
-                font-weight: normal;
-            }
-            .day{
-                background: #18bc9c;
-                margin-top: -20px;
-                display: table-cell;
-                float: right;
-                width: 100%;
-                margin:0px;
-                padding-right: 8px;
-            }
-        </style>
-        <link rel="stylesheet"
-                href="{{url_for('static',filename='css/bootstrap-responsive.min.css')}}">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="{{url_for('static', filename='bootstrap-calendar/css/calendar.css')}}">
+        <link rel="stylesheet"  href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="static/css/main.css">
-
-
-        <script src="{{url_for('static', filename='js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')}}"></script>
-
     </head>
     <body data-spy="scroll" data-target=".navbar">
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-
-        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
-
-        <div class="navbar  navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <a class="brand" href="#">Calentic</a>
-                    <div class="nav-collapse collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Calendario</a></li>
-                            <li><a href="#about">Acerca de</a></li>
-                            <li><a href="#contact">Contacto</a></li>
-                        </ul>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
-        </div>
-
         <div id="event" class="modal hide fade" tabindex="-1" role="dialog">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">×</button>
@@ -77,118 +30,92 @@
         </div>
 
         <div class="container">
+            <h1 class="text-center text-danger"> ZgzTechHub </h1>
             <!-- Main hero unit for a primary marketing message or call to action -->
-                <div class="hero-unit" style="line-height:normal;">
-                <div id="calendar_1">
-                </div>
-                <div style="clear:both"></div>
+            <div class="row">
+                <h2> Eventos proximos </h2>
+                <div class="col-md-12" id="events_top"></div>
             </div>
 
-            <!-- Example row of columns -->
-            <div class="row" style="margin-top:165px; margin-bottom:156px;">
-                <a name="about"> <h1> Acerca de </h1> </a>
-                <div class="hero-unit">
-                    Calentic es un calendario de actividades tecnológicas en
-                    aragón.<br/>
-                    Utiliza un sistema de scrapping desarrollado en una serie
-                    de reuniones del <a
-                            href="https://plus.google.com/communities/103281359456269063508">grupo
-                        de usuarios de python</a>, en <a
-                            href="http://dlabs.co"> dlabs - el
-                        hackerspace de zaragoza.</a><br/>
-
-                </div>
-                <div class="span4">
-                    <h2>Fuentes de datos actuales:</h2>
-                    <li> CIEM </li>
-                    <li> Agile Aragon </li>
-                    <li> BetaBeers </li>
-                    <li> ForosTIC </li>
-                    <li> ITA </li>
-                </div>
-                <div class="span4">
-                    <h2>API</h2>
-                    <p> Disponemos de una api de busqueda de eventos, con la
-                        siguiente forma </p>
-                    <pre>
-/events/term=val/term=val
-                    </pre>
-                    <p> Para extraerlos todos: </p>
-                    <pre>
-/events/all
-                    </pre>
-                    <p><a class="btn" href="#">Ver documentacion &raquo;</a></p>
-               </div>
-                <div class="span4">
-                    <h3> Origen de datos </h3>
-                    <p> Calentic no organiza eventos, recojemos varias fuentes
-                        de datos y las colocamos de una forma amigable, para que
-                        todo el mundo pueda tener control de sus calendarios,
-                        además de exportar un JSON parseable y facilmente
-                        importable en otros calendarios (Y pronto un ICAL)
+            <div class="row">
+                <div class=col-md-12>
+                    <p class="lead" style="margin-top:60px">
+                        Presentación del HUB, un poco de historia ( mención al PUG, mención a dlabs ).
                     </p>
                 </div>
             </div>
 
-            <footer>
-                <p>&copy; Python User Group Zaragoza 2013</p>
-            </footer>
 
+            <div class="row">
+                <div class="col-md-6">
+                    <h3> Listado de eventos de este més </h3>
+                    <ul class="list-unstyled" id="events_monthly"></ul>
+                </div>
+                <div class="col-md-6">
+                    <h3 class="text-center"> Calendario mensual </h3>
+                    <div id="calendar_1"></div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:50px">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="col-md-4">
+                        <img class="img-responsive" src="{{url_for('static', filename='img/google.png')}}" />
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-responsive" src="{{url_for('static',
+                        filename='img/facebook.svg')}}" />
+                    </div>
+                    <div class="col-md-4">
+                        <img class="img-responsive" src="{{url_for('static',
+                        filename='img/twitter.png')}}" />
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <h4> Con la colaboración de </h4>
+                <div class=row>
+                    <div class="col-md-offset-2 col-md-2">
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/dlabs.png')}}" />
+                    </div>
+
+                    <div class=col-md-2>
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/bb.png')}}" />
+                    </div>
+
+                    <div class=col-md-2>
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/guifi.png')}}" />
+                    </div>
+
+                    <div class=col-md-2>
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/agile.png')}}" />
+                    </div>
+                </div>
+                <br/>
+               <div class=row>
+                    <div class="col-md-offset-2 col-md-2">
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/python.png')}}" />
+                    </div>
+
+                    <div class=col-md-2>
+                        <img class=img-responsive src="{{url_for('static',
+                        filename='img/zagales.png')}}" />
+                    </div>
+                </div>
+
+
+            </footer>
         </div> <!-- /container -->
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-        <script>
-            function do_hack_links(that){
-                if ($(this).attr('data-href') != "#") {
-                    $(that).attr('data-href', $(that).attr('href'));
-                    $(that).attr('href', '#');
-                    console.log("HACK");
-                    console.log(that);
-                }
-
-                $(that).click(
-                    function(){
-                        console.log(that);
-                        var href=$(that).attr('data-href');
-                        console.log(href);
-                        $('.modal-body').load(href, function(result){ $('#event').modal({show:true});});
-                        return false;
-                    }
-                );
-            }
-        </script>
-
-
-
-        <script src="{{url_for('static', filename='js/vendor/bootstrap.min.js')}}"></script>
-
         <script src="{{url_for('static', filename='js/main.js')}}"></script>
-        <script src="{{url_for('static',
-filename='bootstrap-calendar/js/language/en-GB.js')}}"></script>
-        <script src="{{url_for('static',
-filename='bootstrap-calendar/js/vendor/underscore-min.js')}}"></script>
-        <script src="{{url_for('static',
-filename='bootstrap-calendar/js/calendar.js')}}"></script>
-
-        <script>
-            $('#calendar_1').calendar({
-                events_url:'/events/all',
-                'tmpl_path':'/static/bootstrap-calendar/tmpls/',
-                'onAfterEventsLoad' : function(){
-                window.setTimeout(function(){
-                    jQuery('a[href^="/event/"]').each(function(){
-                        do_hack_links(this);
-                    });
-                    }, 1000);
-                }
-            })
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
-
-        <script src="{{url_for('static', filename='js/jquery.sidr.min.js')}}"></script>
+        <script src="{{url_for('static', filename='bootstrap-calendar/js/language/en-GB.js')}}"></script>
+        <script src="{{url_for('static', filename='bootstrap-calendar/js/vendor/underscore-min.js')}}"></script>
+        <script src="{{url_for('static', filename='bootstrap-calendar/js/calendar.js')}}"></script>
+        <script> $(function(){ main(); }); </script>
     </body>
 </html>

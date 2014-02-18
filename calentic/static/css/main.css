@@ -1,1 +1,22 @@
-
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+.title{
+    float: left;
+    font-size: small;
+    font-weight: normal;
+}
+.day{
+    background: #18bc9c;
+    margin-top: -20px;
+    display: table-cell;
+    float: right;
+    width: 100%;
+    margin:0px;
+    padding-right: 8px;
+}
+#events_top .col-md-4{
+    min-height:180px;
+    padding:20px;
+}

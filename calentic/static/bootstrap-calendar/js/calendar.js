@@ -606,7 +606,7 @@ if(!String.prototype.format) {
         }
         var activecell = 0;
         var self = this;
-        var downbox = $(document.createElement('div')).attr('id', 'cal-day-box').html('<i class="icon-chevron-down"></i>');
+        var downbox = $(document.createElement('div')).attr('id', 'cal-day-box').html('<i class="glyphicon-chevron-down"></i>');
 
         $('.cal-month-day, .cal-year-box .span3').each(function(k, v) {
             $(v).bind('mouseenter', function() {

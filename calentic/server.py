@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# - coding:utf-8 - #
 """
     TIC Calendar
 
@@ -24,7 +26,10 @@ from flask import Flask, request, render_template
 from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
-
+from flask import Flask, render_template, flash, session, redirect, url_for
+from wtforms import TextAreaField, TextField
+from flask.ext.wtf import Form
+from flask.ext.wtf.recaptcha.fields import RecaptchaField
 from dateutil import parser
 import calentic.scrappers
 import json as _json
@@ -40,17 +45,19 @@ else:
 
 MONGO = PyMongo(APP)
 
+RECAPTCHA_PUBLIC_KEY = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
+RECAPTCHA_PRIVATE_KEY = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
+SECRET_KEY="foo"
+
 def format_event(ev):
     """
     """
 
     description = ev['description'],
 
-    print ev
     if "url" in ev:
         url = ev['url']
     else:
-        print ev
         if "description" in ev:
             if ev['description']:
                 url = ev['description']
@@ -100,6 +107,23 @@ def event(oid):
         url = "<a href='" + events[0]['external-url'] + "'>" + events[0]['external-url'] + "</a>"
     return "<div><h1>" + events[0]['title'] +"</h1><address>"+events[0]["location"]+"</address><p>" + events[0]['description'] + "</p>" + url
 
+class AddForm (Form):
+    name = TextField('name')
+
+@APP.route("/create_event/", methods=['POST', 'GET'])
+def create_event():
+    form = AddForm()
+    if request.method == "POST":
+        print form.validate_on_submit()
+        print request
+        flash("Su evento se añadido correctamente")
+        return redirect("/")
+    else:
+        return render_template(
+            'add_event.html', form=form
+        )
+
+
 @APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):
     """
@@ -119,7 +143,18 @@ def index(route):
                 '$lt'  : dateformat(request.form['to'])
             }
         elif param[0] in allowed_params:
-            search[param[0]] = param[1]
+            if "date" in param[0]:
+                if "end" in param[0]:
+                    status = '$lt'
+                else:
+                    status = '$gt'
+
+                search[param[0]] = {
+                    status : dateformat(param[1])
+                }
+            else:
+                search[param[0]] = param[1]
+    print search
     events = [format_event(ev) for ev in MONGO.db.events.find(search)]
     if len(events) > 0:
         return JSONEncoder().encode(dict({
@@ -172,4 +207,6 @@ def server():
     APP.run(host='0.0.0.0', port=8080)
 
 if __name__ == "__main__":
+    APP.config['SECRET_KEY'] = "FOO"
+    APP.config['secret_key'] = "FOO"
     APP.run(host='0.0.0.0', port=8081, debug=True)

@@ -10,3 +10,4 @@ urllib3
 beautifulsoup4
 lxml
 python-dateutil
+flask-wtf
