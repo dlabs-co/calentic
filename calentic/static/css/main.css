@@ -36,8 +36,10 @@ footer {
     font-size: small;
     font-weight: normal;
 }
-.row .col-md-12>.col-md-3:first-child{
-    margin-left:130px;
+@media (min-width:641px) {
+    .row .col-md-12>.col-md-3:first-child{
+        margin-left:130px;
+    }
 }
 .day{
     background: #18bc9c;
