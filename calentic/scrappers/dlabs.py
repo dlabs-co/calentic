@@ -50,8 +50,8 @@ def get_events():
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
-                'location': "Dlabs - Calle camino de la mosquetera 41",
-                'origin_url' : "http://dlabs.co",
+                'location': "C/Camino de la mosquetera 41",
+                'origin_url' : "http://www.dlabs.co",
             }
 
             dlabs_events.append(eventdlabs)
@@ -59,11 +59,12 @@ def get_events():
         except KeyError:
             eventdlabs = {
                 'origin': 'dlabs',
+                'location': "C/Camino de la mosquetera 41",
                 'title': event['name'],
                 'description': event['description'],
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
-                'origin_url' : "http://dlabs.co",
+                'origin_url' : "http://www.dlabs.co",
             }
 
             dlabs_events.append(eventdlabs)

@@ -56,8 +56,14 @@ footer {
     padding-right: 8px;
 }
 #events_top .col-md-3{
-    min-height:180px;
+    height:190px;
+    overflow:hiddeN;
     padding:20px;
+}
+#events_top h4{
+    overflow: hidden;
+    display: block;
+    height: 1em;
 }
 
 h1,h2,h3,h4,h5, p{

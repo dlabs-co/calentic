@@ -30,11 +30,9 @@ from flask import Flask, render_template, flash, session, redirect, url_for
 from wtforms import TextAreaField, TextField
 from flask.ext.wtf import Form
 from flask.ext.wtf.recaptcha.fields import RecaptchaField
-from dateutil import parser
 import calentic.scrappers
+from calentic.utils import *
 import json as _json
-import datetime
-import time
 import os
 
 APP = Flask(__name__)
@@ -48,56 +46,6 @@ MONGO = PyMongo(APP)
 RECAPTCHA_PUBLIC_KEY = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
 RECAPTCHA_PRIVATE_KEY = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
 SECRET_KEY="foo"
-
-def format_event(ev):
-    """
-    """
-
-    description = ev['description'],
-
-    if "url" in ev:
-        url = ev['url']
-    else:
-        if "description" in ev:
-            if ev['description']:
-                url = ev['description']
-            else:
-                if 'origin_url' in ev:
-                    url = ev['origin_url']
-                else:
-                    url = "#"
-            description = "Ver enlace:"
-        else:
-            url = ev['origin_url']
-    if "location" in ev and ev['location']:
-        location = "Lugar: " + ev['location']
-    else:
-        location = "Lugar desconocido"
-    return {
-        "title" : ev['title'] + "(<a href='"+url+"'>" + ev['origin'] + "</a>)",
-        "url"   : '/event/' + str(ev['_id']),
-        "external-url" : url,
-        'location' : location,
-        'description': description,
-        "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
-        "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
-        "class" : 'event-warning'
-    }
-
-def dateformat(date):
-    """
-        Format date.
-    """
-    return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
-
-class JSONEncoder(_json.JSONEncoder):
-    """
-       Replacing
-    """
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return ""
-        return _json.JSONEncoder.default(self, o)
 
 @APP.route('/event/<oid>', methods=["POST", "GET"])
 def event(oid):
