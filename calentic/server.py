@@ -31,9 +31,56 @@ from wtforms import TextAreaField, TextField
 from flask.ext.wtf import Form
 from flask.ext.wtf.recaptcha.fields import RecaptchaField
 import calentic.scrappers
-from calentic.utils import *
 import json as _json
 import os
+import time
+import datetime
+from dateutil import parser
+import time
+
+
+def get(object_, element, default):
+    if element in object_:
+        return object_[element]
+    else:
+        return default
+
+def format_event(ev):
+    """
+        Return the event with default values.
+    """
+
+    description = ev['description'],
+
+    return {
+        "title" : get(ev, 'title', ""),
+        "origin_url": get(ev, 'origin_url', ""),
+        "origin_name": get(ev, 'origin', ""),
+        "url"   : '/event/' + str(ev['_id']),
+        "external-url" : get(ev, "url", ""),
+        'location' : get(ev, "location", ""),
+        'description': get(ev, "description", ""),
+        "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
+        "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
+        "class" : 'event-warning'
+    }
+
+def dateformat(date):
+    """
+        Format date.
+    """
+    return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
+
+class JSONEncoder(_json.JSONEncoder):
+    """
+       Replacing
+    """
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return ""
+        return _json.JSONEncoder.default(self, o)
+
+
 
 APP = Flask(__name__)
 if "MONGOHQ_URL" in os.environ.keys():
