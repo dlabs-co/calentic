@@ -93,7 +93,7 @@ class CalendarEvent(dict):
     CalendarEvents may also be compared using the >, >=, <, <=, comparison operators, which compare
     the starting times of the events.
     """
-    __slots__ = ( "name", "description", "location", "start_time", "end_time", "all_day",
+    __slots__ = ( "name", "description", "location", "start_time", "end_time", "all_day", "url",
                   "repeats", "repeat_freq", "repeat_day", "repeat_month", "repeat_until" )
 
     def __getattr__(self, key):
@@ -340,6 +340,8 @@ class CalendarParser(object):
                     event_dict["name"] = _normalize(event["summary"])
                 if "DESCRIPTION" in event:
                     event_dict["description"] = _normalize(event["description"])
+                if "URL" in event:
+                    event_dict["url"] = _normalize(event["url"])
                 if "LOCATION" in event and event["location"]:
                     event_dict["location"] = _normalize(event["location"])
                 if "DTSTART" in event:

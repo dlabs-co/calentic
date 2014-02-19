@@ -38,10 +38,7 @@ ics_url = "http://www.dlabs.co/?wp-calendar-ical"
 
 def get_events():
     cal = CalendarParser(ics_url=ics_url)
-
-
     ics_events = cal.parse_calendar()
-
     for event in ics_events:
         try:
             eventdlabs = {
@@ -51,6 +48,7 @@ def get_events():
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
                 'location': "C/Camino de la mosquetera 41",
+                'url' : str(event['url']),
                 'origin_url' : "http://www.dlabs.co",
             }
 
@@ -62,6 +60,7 @@ def get_events():
                 'location': "C/Camino de la mosquetera 41",
                 'title': event['name'],
                 'description': event['description'],
+                'url' : str(event['url']),
                 'start_date': str(event['start_time']),
                 'end_date': str(event['end_time']),
                 'origin_url' : "http://www.dlabs.co",

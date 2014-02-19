@@ -36,12 +36,15 @@ import os
 import time
 import datetime
 from dateutil import parser
+
 import time
 
 
-def get(object_, element, default):
-    if element in object_:
-        return object_[element]
+def get(object_, element, default, append="", link=False):
+    if element in object_ and object_[element] != "":
+        return object_[element] + append
+    elif link:
+        return "<a href=" + link + ">" + default + "</a>"
     else:
         return default
 
@@ -50,20 +53,20 @@ def format_event(ev):
         Return the event with default values.
     """
 
-    description = ev['description'],
-
-    return {
+    a = {
         "title" : get(ev, 'title', ""),
         "origin_url": get(ev, 'origin_url', ""),
         "origin_name": get(ev, 'origin', ""),
         "url"   : '/event/' + str(ev['_id']),
-        "external-url" : get(ev, "url", ""),
+        "externalurl" : get(ev, "url", ""),
         'location' : get(ev, "location", ""),
-        'description': get(ev, "description", ""),
+        'description': get(ev, "description", "Leer más", "...", get(ev, "url", False)),
         "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
         "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
         "class" : 'event-warning'
     }
+    print a
+    return a
 
 def dateformat(date):
     """
@@ -168,6 +171,7 @@ def cron():
                 getattr(calentic.scrappers, scrapper), "get_events"
             )()
             for event in events:
+                print event
                 try:
                     if not MONGO.db.events.find_one({'title': event['title']}):
                         MONGO.db.events.insert(event)

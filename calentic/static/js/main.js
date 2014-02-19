@@ -23,12 +23,13 @@ function get_soon_calendar() {
         '/events/'+ "start_date="+ new Date().getTime() + "/end_date=" + new Date(a.getFullYear(), a.getMonth() +1, 1).getTime(),
         function(data){
             data=JSON.parse(data);
-            $(data.events).each(function(){
+            events = data.events.slice(0,2)
+            $(events).each(function(){
                 console.log(this);
                 $('#events_top').append(
                     "<div class=col-md-3>"+
                     "<span class=date>" + new Date(this.start).toString("dd/MM/yy HH:mm") +  "</span>" +
-                    "<h4>" + this.title + "</h4><p><span class=lead>" + this.description.substr(0,80)  + "...</span><br/><a href=\""+this.origin_url + "\">" + this.origin_name + "</a> - <span class=text-info>" + this.location + "</span></p>" +
+                    "<h4><a href=\"" +this.externalurl+ "\">" + this.title + "</a></h4><p><span class=lead>" + this.description.substr(0,280)  + "...</span></p><p class=down><a href=\""+this.origin_url + "\">" + this.origin_name + "</a> - <span class=text-info>" + this.location + "</span></p>" +
                     "</div>" );
             });
             $('#events_top').append("<div class=col-md-3><h3 class=addnew><a href='/create_event'>Añadir un evento </a></h3></div>");
@@ -43,7 +44,7 @@ function get_monthly_calendar() {
         function(data){
             data=JSON.parse(data);
             $(data.events).each(function(){
-                $('#events_monthly').append("<li>" + this.title + "</li>" );
+                $('#events_monthly').append("<li><h3>" + this.title + " - <a href=\"" + this.origin_url + "\">" + this.origin_name + "</a></h3><p>" +new Date(this.start).toString("dd/MM/yy HH:mm") +" - <a href=\"http://maps.google.com/?q=" + this.location + "\">" + this.location + "</a></p></li>" );
             });
         }
     );

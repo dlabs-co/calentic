@@ -36,7 +36,7 @@ from icalendar import Calendar, Event
 import json
 
 
-DATE_FORMAT = "%a %d-%m-%Y %H:%M"
+DATE_FORMAT = '%Y-%m-%d %H:%M'
 URL = "http://betabeers.com/event/ical/?province_id=Z"
 
 
@@ -76,7 +76,7 @@ def set_content(events_list):
             'origin' : "betabeers",
             'origin_url' : "http://www.betabeers.com",
             'title': title,
-            'url' : description,
+            'url' : str(description),
             'description': "",
             'start_date': start_date,
             'end_date': end_date,
