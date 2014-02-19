@@ -8,6 +8,11 @@ h1{
     font-family: "Exo 2"!important;
     font-size:5em;
 }
+.fixed_h{
+    display: block;
+    overflow-y: hidden;
+    height: 200px;
+}
 .margin-left{
     margin-top:80px;
     margin-right:60px;
