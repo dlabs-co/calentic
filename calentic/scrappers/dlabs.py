@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from calendar_parser import CalendarParser
+from calentic.utils.calendar_parser import CalendarParser
 import json
 import sys
 # Distributed under GNU/GPL 2 license
