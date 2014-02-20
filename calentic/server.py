@@ -27,9 +27,6 @@ from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
 from flask import Flask, render_template, flash, session, redirect, url_for
-from wtforms import TextAreaField, TextField
-from flask.ext.wtf import Form
-from flask.ext.wtf.recaptcha.fields import RecaptchaField
 import calentic.scrappers
 import json as _json
 import os
@@ -65,7 +62,6 @@ def format_event(ev):
         "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
         "class" : 'event-warning'
     }
-    print a
     return a
 
 def dateformat(date):
@@ -105,22 +101,15 @@ def event(oid):
         url = "<a href='" + events[0]['external-url'] + "'>" + events[0]['external-url'] + "</a>"
     return "<div><h1>" + events[0]['title'] +"</h1><address>"+events[0]["location"]+"</address><p>" + events[0]['description'] + "</p>" + url
 
-class AddForm (Form):
-    name = TextField('name')
-
 @APP.route("/create_event/", methods=['POST', 'GET'])
 def create_event():
-    form = AddForm()
     if request.method == "POST":
-        print form.validate_on_submit()
-        print request
-        flash("Su evento se añadido correctamente")
+        MONGO.db.events.insert(request.form.copy().to_dict(flat=True))
         return redirect("/")
     else:
         return render_template(
-            'add_event.html', form=form
+            'add_event.html'
         )
-
 
 @APP.route("/events/<path:route>", methods=['POST', 'GET'])
 def index(route):
@@ -152,7 +141,6 @@ def index(route):
                 }
             else:
                 search[param[0]] = param[1]
-    print search
     events = [format_event(ev) for ev in MONGO.db.events.find(search)]
     if len(events) > 0:
         return JSONEncoder().encode(dict({
@@ -171,7 +159,6 @@ def cron():
                 getattr(calentic.scrappers, scrapper), "get_events"
             )()
             for event in events:
-                print event
                 try:
                     if not MONGO.db.events.find_one({'title': event['title']}):
                         MONGO.db.events.insert(event)
