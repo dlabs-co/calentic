@@ -21,18 +21,22 @@
         <link rel="stylesheet" href="static/css/main.css">
     </head>
     <body data-spy="scroll" data-target=".navbar">
-        <div id="event" class="modal hide fade" tabindex="-1" role="dialog">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h3>Detalles del evento</h3>
-            </div>
-            <div class="modal-body">
-                <p>My modal content here…</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
+<div id=event class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Event details </h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
         <div class="container-fluid">
             <h1 class="text-center text-danger"> Zaragoza Tecnológica </h1>
             <!-- Main hero unit for a primary marketing message or call to action -->

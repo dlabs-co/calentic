@@ -100,8 +100,8 @@ def do_create_event(event):
 def event(oid):
     events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
     url = ""
-    if events[0]['external-url']:
-        url = "<a href='" + events[0]['external-url'] + "'>" + events[0]['external-url'] + "</a>"
+    if events[0]['externalurl']:
+        url = "<a href='" + events[0]['externalurl'] + "'>" + events[0]['externalurl'] + "</a>"
     return "<div><h1>" + events[0]['title'] +"</h1><address>"+events[0]["location"]+"</address><p>" + events[0]['description'] + "</p>" + url
 
 @APP.route("/create_event/", methods=['POST', 'GET'])
