@@ -9,9 +9,13 @@
         <title>Calentic - calendario de eventos TIC en aragón</title>
         <meta name="description" content="Calendario de eventos TIC en aragón">
         <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/2.1.30/css/bootstrap-datetimepicker.min.css">
+
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <link rel="stylesheet"  href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/2.1.30/js/bootstrap-datetimepicker.min.js"></script>
         <link rel="stylesheet" href="static/css/main.css">
     </head>
     <body data-spy="scroll" data-target=".navbar">
@@ -29,9 +33,6 @@
 
         <div class="container">
 <div class="col-md-8 col-md-offset-2">
-end
-start
-
 <form method=post role="form" class="form-horizontal">
 
   <div class="form-group">
@@ -44,14 +45,14 @@ start
   <div class="form-group">
     <label class="col-sm-2 control-label" for="start">Inicio del evento</label>
     <div class="col-sm-8">
-        <input required type=date class=form-control name=start_date />
+        <input required type=datetime data-format="YYYY/MM/DD HH:mm" class=form-control name=start_date />
     </div>
   </div>
 
   <div class="form-group">
     <label class="col-sm-2 control-label" for="end">Fin del evento</label>
     <div class="col-sm-8">
-        <input required type=date class=form-control name=end_date />
+        <input required type=datetime  data-format="YYYY-MM-DD HH:mm" class=form-control name=end_date />
     </div>
   </div>
 
@@ -63,14 +64,14 @@ start
   </div>
 
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="descripcion">Direccion URL del evento</label>
+    <label class="col-sm-2 control-label" for=url>Direccion URL del evento</label>
     <div class="col-sm-8">
         <input required type=url class=form-control name=url />
     </div>
   </div>
 
   <div class="form-group">
-    <label class="col-sm-2 control-label" for="descripcion">Organizador</label>
+    <label class="col-sm-2 control-label" for=origin>Organizador</label>
     <div class="col-sm-8">
         <input required type=text class=form-control name=origin />
     </div>
@@ -79,21 +80,21 @@ start
   <div class="form-group">
     <label class="col-sm-2 control-label" for="origin_url">Direccion URL del organizador</label>
     <div class="col-sm-8">
-        <input required type=url class=form-control name=url />
+        <input required type=url class=form-control name=origin_url />
     </div>
   </div>
 
 
   <div class="form-group">
-    <label class="col-sm-4 control-label" for="descripcion">Descripcion del evento</label>
+    <label class="col-sm-4 control-label" for="description">Descripcion del evento</label>
     <div class="col-sm-8">
-        <textarea type="text" class="form-control" id="descripcion" name="descripcion"></textarea>
+        <textarea type="text" class="form-control" name="description"></textarea>
     </div>
   </div>
 
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
-
         <script src="{{url_for('static', filename='js/main.js')}}"></script>
+        <script type="text/javascript"> $(function () { $('input[type=datetime]').datetimepicker(); }); </script>
     </body>
 </html>

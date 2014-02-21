@@ -27,15 +27,14 @@ from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
 from flask import Flask, render_template, flash, session, redirect, url_for
+from calentic.utils.twitter_calentic import *
 import calentic.scrappers
 import json as _json
 import os
 import time
 import datetime
+from time import strptime, mktime
 from dateutil import parser
-
-import time
-
 
 def get(object_, element, default, append="", link=False):
     if element in object_ and object_[element] != "":
@@ -93,6 +92,10 @@ RECAPTCHA_PUBLIC_KEY = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
 RECAPTCHA_PRIVATE_KEY = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
 SECRET_KEY="foo"
 
+def do_create_event(event):
+    MONGO.db.events.insert(event)
+    publish_twitter(event['title'], event['url'])
+
 @APP.route('/event/<oid>', methods=["POST", "GET"])
 def event(oid):
     events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
@@ -104,7 +107,7 @@ def event(oid):
 @APP.route("/create_event/", methods=['POST', 'GET'])
 def create_event():
     if request.method == "POST":
-        MONGO.db.events.insert(request.form.copy().to_dict(flat=True))
+        do_create_event(request.form.copy().to_dict(flat=True))
         return redirect("/")
     else:
         return render_template(
@@ -161,7 +164,7 @@ def cron():
             for event in events:
                 try:
                     if not MONGO.db.events.find_one({'title': event['title']}):
-                        MONGO.db.events.insert(event)
+                        do_create_event(event)
                     result.append("Event %s added" % event['title'])
                 except Exception, error:
                     result.append("Failed " + event['title' ] + ": " + error)
