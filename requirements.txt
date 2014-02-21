@@ -10,4 +10,4 @@ urllib3
 beautifulsoup4
 lxml
 python-dateutil
-flask-wtf
+https://github.com/sixohsix/twitter/archive/master.zip
