@@ -28,6 +28,7 @@ from bson.objectid import ObjectId
 from calentic.scrappers import *
 from flask import Flask, render_template, flash, session, redirect, url_for
 from calentic.utils.twitter_calentic import *
+from calentic.utils.mail_calentic import *
 import calentic.scrappers
 import json as _json
 import os
@@ -94,6 +95,7 @@ SECRET_KEY="foo"
 
 def do_create_event(event):
     MONGO.db.events.insert(event)
+    send_mail(event['title'], event['url'], event['description'])
     publish_twitter(event['title'], event['url'])
 
 @APP.route('/event/<oid>', methods=["POST", "GET"])
