@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Eventos proximos en zaragoza</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <header>
+        <h1> Zaragoza Tecnológica </h1>
+    </header>
+    <content>
+    <ul>
+        {% for event in events %}
+            <li>
+                {{ event['title'] }}
+            </li>
+        {% endfor %}
+    </ul>
+    </content>
+    <footer style="font-size:x-small">
+        Este correo se envia automaticamente a la lista de correo de google
+        "zaragoza tecnológica", si no quieres recibir este correo, por favor,
+        date de baja de dicha lista.<br/>
+        El correo automatizado se envia con permiso del dueño de la lista de
+        correo, y es pre-moderado como el resto de eventos a mano.
+    </footer>
+</body>
+</html>
