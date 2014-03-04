@@ -17,14 +17,14 @@ class Sender(object):
         self._config = config
 
         self.twitter = Twitter(auth=OAuth(
-            self._config['twitter']['oauth'][0]
+            self._config['twitter']['oauth'][0],
             self._config['twitter']['oauth'][1],
             self._config['twitter']['oauth'][2],
             self._config['twitter']['oauth'][3]
         ))
 
         self.sender = Mailer('smtp.gmail.com', use_tls=True, port=587)
-        self.sender.login(self._config['mail']['address'], self.config['mail']['pass'])
+        self.sender.login(self._config['mail']['address'], self._config['mail']['pass'])
 
     def send_mail(self, html):
         """

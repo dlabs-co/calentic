@@ -152,7 +152,7 @@ def server():
     """
         Main server, this will be executed on command, and with wsgi.
         This way we could still execute it in debug mode from normal console
-        execution
+        execution)
      """
     APP.run(host='0.0.0.0', port=8080)
 

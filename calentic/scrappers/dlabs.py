@@ -19,8 +19,8 @@ from calentic.utils.calendar_parser import CalendarParser, parse_ical
 
 ics_url = "http://www.dlabs.co/?wp-calendar-ical"
 defaults = {
-    'origin' : "Dlabs Hackerspace",
-    'origin_url' : 'http://dlabs.co'
+    'origin' : u"Dlabs Hackerspace",
+    'origin_url' : u'http://dlabs.co'
 }
 
 def get_events():

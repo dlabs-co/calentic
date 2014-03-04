@@ -57,8 +57,8 @@ def set_content(events_list):
         url = event.get('REGISTRATION_URL')
 
         data.append({
-            'origin' : "betabeers",
-            'origin_url' : "http://www.betabeers.com",
+            'origin' : u"betabeers",
+            'origin_url' : u"http://www.betabeers.com",
             'title': title,
             'url' : str(description),
             'description': "",

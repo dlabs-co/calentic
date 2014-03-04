@@ -3,7 +3,7 @@
     <address> {{ event['location'] }} </address>
     <p> {{ event['description'] }} </p>
     <p>
-    {{ event['url']|safe }}
+    <a href="{{ event['url']['url'] }}">{{event['url']['name']}}</a>
     </p>
 </div>
 

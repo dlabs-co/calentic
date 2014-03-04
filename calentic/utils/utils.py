@@ -28,9 +28,16 @@ class Event(object):
         external_url = self._raw_event.get('externalurl', False)
         event = self.format_data()
         if external_url:
-            event["url"] = "<a href='" + externalurl + "'>" + externalurl + "</a>"
+            event['url'] = {
+                'url' : externalurl,
+                'name' : externalurl
+            }
         else:
-            event["url"] = "<a href='" + event['url'] + "'>Más información</a>"
+            old_event_url = event['url']
+            event["url"] = {
+                'url' : old_event_url,
+                'name' : u"Más Información"
+            }
 
         return render_template("single_event.html", event=event)
 
