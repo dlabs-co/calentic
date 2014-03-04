@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import mechanize
+from icalendar import Calendar, Event
+import json
 
 # Distributed under GNU/GPL 2 license
 
@@ -16,25 +19,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see http://www.gnu.org/licenses/
-
-
-"""
-ORIGIN:
-IMAGE:
-TITLE:
-DESCRIPTION:
-START_DATE:
-END_DATE:
-LOCATION:
-GEOLOCATION:
-REGISTRATION_URL:
-"""
-
-
-import mechanize
-from icalendar import Calendar, Event
-import json
-
 
 DATE_FORMAT = '%Y-%m-%d %H:%M'
 URL = "http://betabeers.com/event/ical/?province_id=Z"

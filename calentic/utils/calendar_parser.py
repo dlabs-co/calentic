@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 "A Google Calendar Parser"
 
 from datetime import datetime, date, timedelta
@@ -397,3 +400,33 @@ class CalendarParser(object):
             return [event for event in generator]
         else:
             return generator
+
+def parse_ical(ics_url, defaults):
+    cal = CalendarParser(ics_url=ics_url)
+    ics_events = cal.parse_calendar()
+
+    for event in ics_events:
+        try:
+            events.append({
+                'origin': defaults['origin_url'],
+                'title': event['name'],
+                'description': "Más información <a href='" + event['description'] +"'>aquí</a>",
+                'start_date': str(event['start_time']),
+                'end_date': str(event['end_time']),
+                'url' : str(event['registration_url']),
+                'location': str(event['location']),
+                'origin_url' : defaults['origin_url']
+            })
+        except KeyError:
+            events.append({
+                'origin': defaults['origin'],
+                'title': event['name'],
+                'description': event['description'],
+                'start_date': str(event['start_time']),
+                'end_date': str(event['end_time']),
+                'origin_url' : defaults['origin_url']
+            })
+
+    return events
+
+

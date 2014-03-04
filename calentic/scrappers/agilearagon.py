@@ -1,61 +1,13 @@
-# -*- coding: utf-8 -*-
-from calentic.utils.calendar_parser import CalendarParser
-import json
-import sys
-
-
-"""
-ORIGIN:
-IMAGE:
-TITLE:
-DESCRIPTION:
-START_DATE:
-END_DATE:
-LOCATION:
-GEOLOCATION:
-REGISTRATION_URL:
-"""
-reload(sys)
-sys.setdefaultencoding("utf-8")
-agile_events = []
+#!/usr/bin/env python
+# -*- encoding: utf-8 -*-
+from calentic.utils.calendar_parser import CalendarParser, parse_ical
 
 ics_url = "https://www.google.com/calendar/ical/agileenaragon%40gmail.com/public/basic.ics"
+defaults = {
+    'origin' : "Agile Aragón",
+    'origin_url' : 'http://agile-aragon.org'
+}
 
 def get_events():
-    cal = CalendarParser(ics_url=ics_url)
+    return parse_ical(ics_url, defaults)
 
-
-    ics_events = cal.parse_calendar()
-
-    for event in ics_events:
-        try:
-            eventAgile = {
-                'origin': 'Agile Aragón',
-                'bad_description': True,
-                'title': event['name'],
-                'description': "Más información <a href='" + event['description'] +"'>aquí</a>",
-                'start_date': str(event['start_time']),
-                'end_date': str(event['end_time']),
-                'url' : str(event['registration_url']),
-                'location': str(event['location']),
-                'origin_url' : "http://agile-aragon.org",
-            }
-
-            agile_events.append(eventAgile)
-
-        except KeyError:
-            eventAgile = {
-                'origin': 'Agile Aragón',
-                'title': event['name'],
-                'description': event['description'],
-                'start_date': str(event['start_time']),
-                'end_date': str(event['end_time']),
-                'origin_url' : "http://agile-aragon.org",
-            }
-
-            agile_events.append(eventAgile)
-
-    return agile_events
-
-if __name__ == "__main__":
-    print json.dumps(get_events())

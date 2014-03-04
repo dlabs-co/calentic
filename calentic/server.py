@@ -27,59 +27,12 @@ from flask.ext.pymongo import PyMongo
 from bson.objectid import ObjectId
 from calentic.scrappers import *
 from flask import Flask, render_template, flash, session, redirect, url_for
-from calentic.utils.twitter_calentic import *
-from calentic.utils.mail_calentic import *
+from calentic.utils.private import sender_config
+from calentic.utils.comunication import Sender
+from calentic.utils.utils import Event, JSONEncoder, dateformat
 import calentic.scrappers
-import json as _json
 import os
-import time
-import datetime
-from time import strptime, mktime
-from dateutil import parser
-
-def get(object_, element, default, append="", link=False):
-    if element in object_ and object_[element] != "":
-        return object_[element] + append
-    elif link:
-        return "<a href=" + link + ">" + default + "</a>"
-    else:
-        return default
-
-def format_event(ev):
-    """
-        Return the event with default values.
-    """
-
-    a = {
-        "title" : get(ev, 'title', ""),
-        "origin_url": get(ev, 'origin_url', ""),
-        "origin_name": get(ev, 'origin', ""),
-        "url"   : '/event/' + str(ev['_id']),
-        "externalurl" : get(ev, "url", ""),
-        'location' : get(ev, "location", ""),
-        'description': get(ev, "description", "Leer más", "...", get(ev, "url", False)),
-        "start" : time.mktime(parser.parse(ev['start_date']).timetuple()) * 1000,
-        "end"   : time.mktime(parser.parse(ev['end_date']).timetuple()) * 1000,
-        "class" : 'event-warning'
-    }
-    return a
-
-def dateformat(date):
-    """
-        Format date.
-    """
-    return datetime.datetime.fromtimestamp(int(int(date) / 1000)).strftime('%Y-%m-%d %H:%M:%S')
-
-class JSONEncoder(_json.JSONEncoder):
-    """
-       Replacing
-    """
-    def default(self, o):
-        if isinstance(o, ObjectId):
-            return ""
-        return _json.JSONEncoder.default(self, o)
-
-
+import sys
 
 APP = Flask(__name__)
 if "MONGOHQ_URL" in os.environ.keys():
@@ -88,28 +41,29 @@ else:
     APP.config['MONGO_DB'] = "calentic"
 
 MONGO = PyMongo(APP)
+sender=Sender(sender_config)
 
-RECAPTCHA_PUBLIC_KEY = '6LeYIbsSAAAAACRPIllxA7wvXjIE411PfdB2gt2J'
-RECAPTCHA_PRIVATE_KEY = '6LeYIbsSAAAAAJezaIq3Ft_hSTo0YtyeFG-JgRtu'
-SECRET_KEY="foo"
+def do_create_events(events):
+    """
+        Create events.
+    """
+    for event in events:
+        MONGO.db.events.insert(event)
+        publish_twitter(event['title'], event['url'])
 
-def do_create_event(event):
-    MONGO.db.events.insert(event)
-    send_mail(event['title'], event['url'], event['description'])
-    publish_twitter(event['title'], event['url'])
+    sender.send_mail(render_template('mail_base.html', events = events))
+
+    return True
 
 @APP.route('/event/<oid>', methods=["POST", "GET"])
 def event(oid):
-    events = [format_event(ev) for ev in MONGO.db.events.find({ '_id' : ObjectId(oid) }) ]
-    url = ""
-    if events[0]['externalurl']:
-        url = "<a href='" + events[0]['externalurl'] + "'>" + events[0]['externalurl'] + "</a>"
-    return "<div><h1>" + events[0]['title'] +"</h1><address>"+events[0]["location"]+"</address><p>" + events[0]['description'] + "</p>" + url
+    return [Event(ev) for ev in MONGO.db.events.find({ '_id' :
+        ObjectId(oid) }) ][0].get_formatted_html()
 
 @APP.route("/create_event/", methods=['POST', 'GET'])
 def create_event():
     if request.method == "POST":
-        do_create_event(request.form.copy().to_dict(flat=True))
+        do_create_events([request.form.copy().to_dict(flat=True)])
         return redirect("/")
     else:
         return render_template(
@@ -125,58 +79,63 @@ def index(route):
 
     allowed_params = ["start_date", "end_date", "place", "origin"]
     search = {}
-    for param_ in route.split("/"):
-        param = param_.split("=")
-        if "from" in request.form.values():
-            search["start_date"] = {
-                '$gt' : dateformat(request.form['from'])
-            }
-            search["end_date"] = {
-                '$lt'  : dateformat(request.form['to'])
-            }
-        elif param[0] in allowed_params:
-            if "date" in param[0]:
-                if "end" in param[0]:
-                    status = '$lt'
-                else:
-                    status = '$gt'
 
-                search[param[0]] = {
-                    status : dateformat(param[1])
-                }
+    for param_ in route.split("/"):
+        if param_ != "all":
+            name, value = param_.split("=")
+
+        if "from" in request.form.values():
+            search["start_date"] = {'$gt' : dateformat(request.form['from'])}
+            search["end_date"] = {'$lt'  : dateformat(request.form['to'])}
+        elif param_ != "all" and name in allowed_params:
+            if "date" in name:
+                status = '$gt'
+                if "end" in name:
+                    status = '$lt'
+                search_query = {status : dateformat(value)}
             else:
-                search[param[0]] = param[1]
-    events = [format_event(ev) for ev in MONGO.db.events.find(search)]
+                search_query = value
+            search[name] = value
+
+    events = [Event(ev).format_data() for ev in MONGO.db.events.find(search)]
+
     if len(events) > 0:
         return JSONEncoder().encode(dict({
             'events' : events,
             'success': True
         }))
-    else:
-        return ""
+
+    return ""
 
 @APP.route('/repopulate')
 def cron():
-    result = []
+    errors = []
+    added_events = []
     for scrapper in calentic.scrappers.__all__:
         try:
             events = getattr(
                 getattr(calentic.scrappers, scrapper), "get_events"
             )()
-            for event in events:
-                try:
-                    if not MONGO.db.events.find_one({'title': event['title']}):
-                        do_create_event(event)
-                    result.append("Event %s added" % event['title'])
-                except Exception, error:
-                    result.append("Failed " + event['title' ] + ": " + error)
-
         except Exception, err:
-            print "Error happened while trying to retrieve %s events:%s" % (
-                scrapper, err
-            )
             continue
-    return _json.dumps(result)
+
+        for event in events:
+            try:
+                if not MONGO.db.events.find_one({'title': event['title']}):
+                    added_events.append(event)
+            except Exception, error:
+                errors.append({
+                    "status": "failed",
+                    "title": event['title' ],
+                    "Error": error
+                })
+
+        do_create_events(added_events)
+
+    if errors != []:
+        return JSONEncoder().encode(errors)
+    else:
+        return JSONEncoder().encode(added_events)
 
 @APP.route("/")
 def main():
@@ -198,6 +157,4 @@ def server():
     APP.run(host='0.0.0.0', port=8080)
 
 if __name__ == "__main__":
-    APP.config['SECRET_KEY'] = "FOO"
-    APP.config['secret_key'] = "FOO"
     APP.run(host='0.0.0.0', port=8081, debug=True)
